@@ -9,45 +9,57 @@
     <!-- A-Frame core -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-    <!-- Componenti personalizzati (già tuoi) -->
+    <!-- I tuoi componenti (se li usi) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
+
+    <style>
+      /* Toggle audio semplice */
+      #audioToggle{
+        position: absolute; top: 10px; right: 10px;
+        background: #fff; border-radius: 50%; padding: 10px;
+        cursor: pointer; user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        font-size: 18px; line-height: 1;
+      }
+    </style>
   </head>
   <body>
     <a-scene
       cursor="rayOrigin: mouse"
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       camera-position>
 
-      <!-- Asset della pagina -->
+      <!-- Asset -->
       <a-assets>
+        <!-- Panorama e preview -->
         <img id="sky" crossorigin="anonymous" src="foto/atrioingresso3.jpeg">
         <img id="aristodemopreview" crossorigin="anonymous" src="foto/atriopreviewalto.jpg">
         <img id="pianopreview" crossorigin="anonymous" src="foto/pianopreview.jpg">
         <img id="esternopreview" crossorigin="anonymous" src="foto/esternovilla.jpeg">
         <img id="cappellapreview" crossorigin="anonymous" src="foto/cappellapreview.jpg">
         <img id="direzionepreview" crossorigin="anonymous" src="foto/direzionepreview.jpg">
+
+        <!-- Logo -->
         <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
 
-        <!-- Rinominati per evitare conflitti -->
+        <!-- Modella + suoni -->
         <a-asset-item id="welcomeModel" src="model/sophiawelcome.glb"></a-asset-item>
         <audio id="welcomeSnd" src="audio/welcome.mp3"></audio>
         <audio id="bgSnd" src="audio/ingresso.mp3"></audio>
       </a-assets>
 
-      <!-- Equirettangolare -->
+      <!-- Cielo 360° -->
       <a-sky src="#sky" rotation="0 -80 0"></a-sky>
 
-      <!-- Personaggio di benvenuto -->
+      <!-- Modella: parla al click -->
       <a-entity id="welcomeChar"
+                class="clickable"
                 gltf-model="#welcomeModel"
-                position="-14 -12 -4" 
-                rotation="0 80 0" 
+                position="-14 -12 -4"
+                rotation="0 80 0"
                 scale="0.1 0.1 0.1">
-        <!-- Animazione bobbing -->
-        <a-entity animation__bob="property: position; dir: alternate; loop: true; dur: 1000; to: 0 1.2 -3"></a-entity>
-        <a-sound src="#welcomeSnd"></a-sound>
+        <a-sound id="welcomeVoice" src="#welcomeSnd" volume="2"></a-sound>
       </a-entity>
 
       <!-- Link stanza 1: Cappella -->
@@ -59,7 +71,7 @@
 
       <!-- Link stanza 2: Atrio principale -->
       <a-link href="atrio.html"
-              title="Villa Ventilj - Atrio principale"
+              title="Villa Ventilj-Atrio principale"
               image="#aristodemopreview"
               position="6 0.5 2"
               rotation="0 100 0"></a-link>
@@ -85,46 +97,50 @@
               position="-5 0.5 3.5"
               rotation="0 -80 0"
               scale="1 1 1"></a-link>
-    
 
-      <!-- Copertura per treppiede + logo -->
+      <!-- Tappo treppiede + logo -->
       <a-entity position="10 -130 12">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-image src="#logo" position="0 1 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- Luci -->
+      <!-- Luci per resa migliore modelli -->
       <a-entity light="type: ambient; intensity: 0.7"></a-entity>
       <a-entity light="type: directional; intensity: 0.8" position="1 3 2"></a-entity>
 
-      <!-- Controller VR -->
+      <!-- Controller VR (se usi i tuoi link-controls) -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
 
-      <!-- Audio di sottofondo -->
-      <a-entity sound="src: #bgSnd; autoplay: true; loop: true; volume: 3"></a-entity>
+      <!-- Audio di sottofondo (facoltativo) -->
+      <a-entity id="bgAudio" sound="src: #bgSnd; autoplay: true; loop: true; volume: 3"></a-entity>
     </a-scene>
 
-    <!-- Toggle audio -->
-    <div id="audioToggle" style="position: absolute; top: 10px; right: 10px; background: #fff; padding: 10px; border-radius: 50%; cursor: pointer;">
-      🔊
-    </div>
+    <!-- Toggle audio di sottofondo -->
+    <div id="audioToggle">🔊</div>
 
     <script>
-      const audioToggle = document.getElementById('audioToggle');
-      const backgroundSound = document.querySelector('[sound]');
-      let isSoundOn = true;
-
-      audioToggle.addEventListener('click', () => {
-        isSoundOn = !isSoundOn;
-        backgroundSound.components.sound[isSoundOn ? 'playSound' : 'pauseSound']();
-        audioToggle.textContent = isSoundOn ? '🔊' : '🔇';
+      // Click sulla modella: riproduci benvenuto
+      const welcomeChar  = document.getElementById('welcomeChar');
+      const welcomeVoice = document.getElementById('welcomeVoice');
+      welcomeChar.addEventListener('click', () => {
+        const snd = welcomeVoice.components.sound;
+        try { snd.stopSound(); } catch(e) {}
+        snd.playSound();
       });
 
-      const welcomeChar = document.getElementById('welcomeChar');
-      const welcomeSnd = welcomeChar.querySelector('[sound]');
-      welcomeChar.addEventListener('mouseenter', () => welcomeSnd.components.sound.playSound());
-      welcomeChar.addEventListener('mouseleave', () => welcomeSnd.components.sound.stopSound());
+      // Toggle audio di sottofondo
+      const audioToggle = document.getElementById('audioToggle');
+      const bgAudioEnt  = document.getElementById('bgAudio');
+      const bgSound     = () => bgAudioEnt?.components?.sound;
+      let bgOn = true;
+
+      audioToggle.addEventListener('click', () => {
+        bgOn = !bgOn;
+        if (!bgSound()) return;
+        if (bgOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+        else      { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+      });
     </script>
   </body>
 </html>
