@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Progetto di Tesi Panotour con navigazione in A-Frame</title>
+    <meta name="description" content="Progetto di Tesi Panotour con navigazione in aframe">
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="js/components/aframe-tooltip-component.js"></script>
+    <script src="js/components/camera-position.js"></script>
+    <script src="js/components/link-controls.js"></script>
+  </head>
+  <body>
+    <a-scene
+      raycaster="far: 100; objects: [link];"
+      cursor="rayOrigin: mouse"
+      camera-position
+      environment>
+      
+      <!-- Componenti della pagina -->
+      <a-assets>
+        <img id="sky" crossOrigin="anonymous" src="foto/atrioingresso3.jpeg">
+        <img id="aristodemopreview" crossOrigin="anonymous" src="foto/atriopreviewalto.jpg">
+        <img id="pianopreview" crossOrigin="anonymous" src="foto/pianopreview.jpg">
+        <img id="esternopreview" crossOrigin="anonymous" src="foto/esternovilla.jpeg">
+        <img id="cappellapreview" crossOrigin="anonymous" src="foto/cappellapreview.jpg">
+        <img id="direzionepreview" crossOrigin="anonymous" src="foto/direzionepreview.jpg">
+        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <a-asset-item id="welcome-character" src="model/sophiawelcome.glb"></a-asset-item>
+        <audio id="welcome-sound" src="audio/welcome.mp3"></audio>
+        <audio id="background-sound" src="audio/ingresso.mp3" loop="true"></audio>
+      </a-assets>
+      
+      <!-- Immagine equirettangolare -->
+      <a-sky src="#sky" rotation="0 -80 0"></a-sky>
+      
+      <!-- Modello del personaggio che dà il benvenuto -->
+      <a-entity id="welcome-character" gltf-model="#welcome-character" position="-14 -12 -4" rotation="0 80 0" scale="0.1 0.1 0.1">
+        <a-animation attribute="position" to="0 1 -3" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
+        <a-sound id="welcome-sound" src="#welcome-sound"></a-sound>
+      </a-entity>
+      
+      <!-- Link stanza 1: Cappella  -->
+      <a-link href="cappella.html"
+              title="Villa Ventilj - Cappella privata"
+              image="#cappellapreview"
+              position="-3 0.5 -2"
+              rotation="0 30 0"
+              ></a-link>
+      
+      <!-- Link a stanza 2: Atrio principale  -->
+      <a-link href="atrio.html"
+              title="Villa Ventilj-Atrio principale"
+              image="#aristodemopreview"
+              position="6 0.5 2"
+              rotation="0 100 0"
+              ></a-link> 
+       <!-- Link a stanza 3: Piano nobile  -->
+      <a-link href="pianonobile.html"
+              title="Villa Ventilj - Museo Raffaello Pagliaccetti"
+              image="#pianopreview"
+              position="2 0.5 -3"
+              rotation="0 -25 0"
+              ></a-link> 
+       <!-- Link a stanza 4: Direzione  -->
+      <a-link href="direzione.html"
+              title="Villa Ventilj - Stanze di Pasquale Ventilj"
+              image="#direzionepreview"
+              position="3 0.5 6"
+              rotation="0 30 0"
+              ></a-link> 
+  
+  <!-- Link a stanza 5: Esterno Giardino -->
+<a-link href="esternogiardino.html"
+        title="Villa Ventilj - Esterno"
+        image="#esternopreview"
+        position="-5 0.5 3.5"
+        rotation="0 -80 0"
+        scale="1 1 1"  <!-- Adatta la scala al link -->
+       
+</a-link>
+
+      
+ <!-- Cilindro per coprire il treppiedi con testo -->
+      <a-entity position="10 -130 12" rotation="0 0 0">
+        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
+        <a-entity position="0 1 0">
+       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
+      </a-entity>      
+
+      
+      <!-- Controlli VR vedi: js/components/link-controls.js-->
+      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
+      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+      
+      <!-- Audio di sottofondo con volume regolabile -->
+      <a-entity sound="src: #background-sound; autoplay: true; loop: true; volume: 3"></a-entity>
+      
+    </a-scene>
+    
+    <!-- Pulsante per disattivare/attivare l'audio -->
+    <div id="audioToggle" style="position: absolute; top: 10px; right: 10px; background: #fff; padding: 10px; border-radius: 50%; cursor: pointer;">
+      🔊
+    </div>
+
+    <script>
+      const audioToggle = document.getElementById('audioToggle');
+      const backgroundSound = document.querySelector('[sound]');
+      let isSoundOn = true;
+
+      audioToggle.addEventListener('click', () => {
+        isSoundOn = !isSoundOn;
+        backgroundSound.components.sound[isSoundOn ? 'playSound' : 'pauseSound']();
+        audioToggle.textContent = isSoundOn ? '🔊' : '🔇';
+      });
+
+      // Avvio audio di benvenuto quando l'utente guarda verso il personaggio
+      const welcomeCharacter = document.getElementById('welcome-character');
+      const welcomeSound = document.querySelector('#welcome-character [sound]');
+
+      welcomeCharacter.addEventListener('mouseenter', () => {
+        welcomeSound.components.sound.playSound();
+      });
+
+      welcomeCharacter.addEventListener('mouseleave', () => {
+        welcomeSound.components.sound.stopSound();
+      });
+    </script>
+  </body>
+</html>
