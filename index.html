@@ -9,17 +9,17 @@
     <!-- A-Frame core -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-    <!-- I tuoi componenti (se li usi) -->
+    <!-- Componenti personalizzati (se li usi) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
 
     <style>
-      /* Toggle audio semplice */
-      #audioToggle{
+      #audioToggle {
         position: absolute; top: 10px; right: 10px;
         background: #fff; border-radius: 50%; padding: 10px;
-        cursor: pointer; user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        cursor: pointer; user-select: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,.2);
         font-size: 18px; line-height: 1;
       }
     </style>
@@ -47,20 +47,34 @@
         <a-asset-item id="welcomeModel" src="model/sophiawelcome.glb"></a-asset-item>
         <audio id="welcomeSnd" src="audio/welcome.mp3"></audio>
         <audio id="bgSnd" src="audio/ingresso.mp3"></audio>
+
+        <!-- Icona play -->
+        <img id="playIconImg" src="icons/play.png">
       </a-assets>
 
       <!-- Cielo 360° -->
       <a-sky src="#sky" rotation="0 -80 0"></a-sky>
 
-      <!-- Modella: parla al click -->
+      <!-- Modella -->
       <a-entity id="welcomeChar"
-                class="clickable"
                 gltf-model="#welcomeModel"
                 position="-14 -12 -4"
                 rotation="0 80 0"
                 scale="0.1 0.1 0.1">
-        <a-sound id="welcomeVoice" src="#welcomeSnd" volume="2"></a-sound>
       </a-entity>
+
+      <!-- Icona Play davanti alla modella -->
+      <a-image id="playIcon"
+               class="clickable"
+               src="#playIconImg"
+               position="-14 -10 -4"
+               scale="1 1 1"
+               transparent="true">
+      </a-image>
+
+      <!-- Suono di benvenuto -->
+      <a-entity id="welcomeVoice"
+                sound="src: #welcomeSnd; volume: 2"></a-entity>
 
       <!-- Link stanza 1: Cappella -->
       <a-link href="cappella.html"
@@ -104,26 +118,26 @@
         <a-image src="#logo" position="0 1 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- Luci per resa migliore modelli -->
+      <!-- Luci -->
       <a-entity light="type: ambient; intensity: 0.7"></a-entity>
       <a-entity light="type: directional; intensity: 0.8" position="1 3 2"></a-entity>
 
-      <!-- Controller VR (se usi i tuoi link-controls) -->
+      <!-- Controller VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
 
-      <!-- Audio di sottofondo (facoltativo) -->
+      <!-- Audio di sottofondo -->
       <a-entity id="bgAudio" sound="src: #bgSnd; autoplay: true; loop: true; volume: 3"></a-entity>
     </a-scene>
 
-    <!-- Toggle audio di sottofondo -->
+    <!-- Toggle audio -->
     <div id="audioToggle">🔊</div>
 
     <script>
-      // Click sulla modella: riproduci benvenuto
-      const welcomeChar  = document.getElementById('welcomeChar');
+      // Play welcome al click sull'icona
+      const playIcon = document.getElementById('playIcon');
       const welcomeVoice = document.getElementById('welcomeVoice');
-      welcomeChar.addEventListener('click', () => {
+      playIcon.addEventListener('click', () => {
         const snd = welcomeVoice.components.sound;
         try { snd.stopSound(); } catch(e) {}
         snd.playSound();
@@ -144,3 +158,4 @@
     </script>
   </body>
 </html>
+
