@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Ufficio Pasquale Ventilj</title>
+    <title>Sala Letteratura</title>
     <meta name="description" content="Pasquale Ventilj - Mosciano Sant'Angelo">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -23,33 +23,42 @@
       <!-- Componenti della pagina -->
       <a-assets>
         <img id="salaartipreview" crossOrigin="anonymous" src="foto/artipreview.jpg">
-        <img id="direzione" crossOrigin="anonymous" src="foto/direzione360.jpeg">
-        <img id="vetratapreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
+        <img id="salaautori360" crossOrigin="anonymous" src="foto/salaautori360.jpeg">
         <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="vetratapreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
+        <img id="salaarti" crossOrigin="anonymous" src="foto/salaautori.jpg">
+        <img id="aristodemopreview" crossorigin="anonymous" src="foto/atriopreviewalto.jpg">
         
       </a-assets>
       
       <!-- Immagine equirettangolare -->
-      <a-sky src="#direzione"
+      <a-sky src="#salaautori360"
              rotation="0 0 0"></a-sky>
       
-      <!-- Link ad altra stanza torna indietro -->
+      <!-- Link ad altra stanza torna all'ingresso -->
       <a-link href="index.html"
               title="Torna all'ingresso"
               image="#vetratapreview"
-              position="7 0 7"
-              rotation="0 90 0"></a-link>
+              position="11 0 3"
+              rotation="0 100 0"></a-link>
       
-        <!-- Link ad altra stanza Sala arti -->
+        <!-- Link ad altra stanza Sala Arti -->
       <a-link href="salaarti.html"
               title="Sala delle Arti"
               image="#salaartipreview"
-              position="-7 0.25 4"
+              position="10 0 0"
               rotation="0 -90 0"></a-link>
+      
+        <!-- Link ad altra stanza Atrio principale -->
+      <a-link href="atrio.html"
+              title="Villa Ventilj-Atrio principale"
+              image="#aristodemopreview"
+              position="6 0.5 10"
+              rotation="0 30 0"></a-link>
 
            
  <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -180 12" rotation="0 0 0">
+      <a-entity position="10 -300 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
        <a-image src="#logo" position="0 -0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>

@@ -27,6 +27,7 @@
         <img id="hallpreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
        <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">  
         <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="salaautori" crossOrigin="anonymous" src="foto/salaautori.jpg">
       </a-assets>
       
       <!-- Immagine equirettangolare -->
@@ -43,17 +44,24 @@
        
       <!-- Link ad altra stanza - Sali al piano nobile-Museo -->
       <a-link href="pianonobile.html"
-              title="Piano nobile-Vai al Museo"
+              title="Vai al Museo-Piano Nobile"
               image="#museopreview"
               position="6 0 8"
               rotation="0 65 0">
               </a-link>
+
+        <!-- Link ad altra stanza Sala da pranzo -->
+      <a-link href="salaletteratura.html"
+              title="Sala degli autori"
+              image="#salaautori"
+              position="-6 0.30 10"
+              rotation="0 -25 0"></a-link>
      
   <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -130 12" rotation="0 0 0">
+      <a-entity position="11 -180 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 7" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
+       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
       </a-entity>      
             
       <!-- Controlli VR vedi: js/components/link-controls.js-->
