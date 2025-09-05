@@ -30,20 +30,20 @@
       
       <!-- Immagine equirettangolare -->
       <a-sky src="#saladue360"
-             rotation="0 0 0"></a-sky>
+             rotation="5 -80 0"></a-sky>
       
       <!-- Link ad altra stanza torna indietro -->
       <a-link href="museopagliaccetti.html"
               title="Torna indietro"
               image="#museopreview"
-              position="-8 0 3"
+              position="-8 1.6 3"
               rotation="0 -80 0"></a-link>
       
        <!-- Link ad altra stanza Sala 3-->
       <a-link href="salatre.html"
               title="Visita-Sala 3"
               image="#salatrepreview"
-              position="4 0 -4"
+              position="4 1.6 -4"
               rotation="0 -20 0"></a-link>
       
       
@@ -54,7 +54,8 @@
        <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
       </a-entity>      
 
-
+      <!-- Prova modifica punto di vista camera -->
+        <a-entity camera look-controls wasd-controls="enabled: false" position="0 1.6 0"></a-entity>
      
     
       <!-- Controlli VR vedi: js/components/link-controls.js-->
