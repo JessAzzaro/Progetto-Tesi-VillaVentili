@@ -4,62 +4,81 @@
     <meta charset="utf-8">
     <title>Visita-Sala 4</title>
     <meta name="description" content="Museo Pagliaccetti- Villa Ventilj Mosciano Sant'Angelo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <!-- (opzionali, se li usi davvero) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
       cursor="rayOrigin: mouse"
-      camera-position
-      environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+      raycaster="far: 100; objects: .clickable, [link];">
+
+      <!-- ASSETS -->
       <a-assets>
-      <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
-      <img id="salaquattro360" crossOrigin="anonymous" src="foto/salaquattro360.jpeg">
-      <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-      <img id="salaciquepreview" crossOrigin="anonymous" src="foto/salacinquepreview.jpg">
+        <img id="museopreview" crossorigin="anonymous" src="foto/museopreview.jpg">
+        <img id="salaquattro360_1" crossorigin="anonymous" src="foto/salaquattro360_1.jpeg">
+        <img id="salaquattro360_2" crossorigin="anonymous" src="foto/salaquattro360_2.jpeg"> <!-- nuova -->
+        <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="salaciquepreview" crossorigin="anonymous" src="foto/salacinquepreview.jpg">
+        <img id="arrowImg" src="icons/arrow.png"> <!-- icona freccia -->
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#salaquattro360"
-             rotation="0 -0 0"></a-sky>
-      
-      <!-- Link ad altra stanza torna indietro a Sala 2 -->
+
+      <!-- PANORAMA (switchiamo il src di questo sky) -->
+      <a-sky id="sky"
+             src="#salaquattro360_1"
+             rotation="0 0 0"
+             material="shader: flat"></a-sky>
+
+      <!-- FRECCIA per cambiare angolazione -->
+      <a-image id="nextView"     
+               class="clickable"
+               src="#arrowImg"
+               position="-4 3 -6"
+               scale="0.6 0.6 0"
+               rotation="0 30 0"
+               material="shader: flat; transparent: true; alphaTest: 0.05"
+               transparent="true"></a-image>
+
+      <!-- Link ad altra stanza: torna a Sala 3 -->
       <a-link href="salatre.html"
-              title="Torna indietro-Sala 3"
+              title="Torna indietro - Sala 3"
               image="#museopreview"
               position="6 0 -2"
               rotation="0 -60 0"></a-link>
-      
-       <!-- Link ad altra stanza Sala 5-->
-      <a-link href="salacinque.html"
-              title="Visita-Sala 5"
-              image="#salacinquepreview"
-              position="-7 0 0"
-              rotation="0 50 0"></a-link>
-      
-      
-      <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -130 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
-      </a-entity>      
 
-       
-    
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
+      <!-- Link ad altra stanza: Sala 5 -->
+      <a-link href="salacinque.html"
+              title="Visita - Sala 5"
+              image="#salaciquepreview"
+              position="-5 1 6"
+              rotation="0 -50 0"></a-link>
+
+      <!-- Copertura treppiedi + logo -->
+      <a-entity position="10 -180 12">
+        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 205 0" scale="-1 1 1"></a-image>
+      </a-entity>
+
+      <!-- Controller VR (se usi link-controls) -->
+      <a-entity id="leftHand"  link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
+    <script>
+      // cambia panorama tra _1 e _2 al click sulla freccia
+      const sky = document.getElementById('sky');
+      const nextView = document.getElementById('nextView');
+      let current = 1;
+
+      nextView.addEventListener('click', () => {
+        current = (current === 1) ? 2 : 1;
+        sky.setAttribute('src', current === 1 ? '#salaquattro360_1' : '#salaquattro360_2');
+      });
+    </script>
   </body>
 </html>
