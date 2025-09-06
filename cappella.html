@@ -4,68 +4,80 @@
     <meta charset="utf-8">
     <title>Cappella Ventilj</title>
     <meta name="description" content="Stanza con foto 360">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   </head>
   <body>
-    <a-scene raycaster="far: 100; objects: [link];" cursor="rayOrigin: mouse" camera-position environment>
-      <!-- Componenti della pagina -->
+    <a-scene raycaster="far: 100; objects: .clickable, [link];" cursor="rayOrigin: mouse">
+
+      <!-- ASSETS -->
       <a-assets>
-        <img id="chiesa" crossOrigin="anonymous" src="foto/chiesa_2.jpeg">
-        <img id="chiesa1" crossOrigin="anonymous" src="foto/chiesa_1.jpeg"> <!-- Nuova immagine -->
-        <img id="vetratapreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
-        <audio id="background-music" src="audio/chiesa.mp3" preload="auto"></audio> <!-- Assicurati di avere il file audio nella cartella corretta -->
-        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="chiesa1" crossorigin="anonymous" src="foto/chiesa_1.jpeg">
+        <img id="chiesa2" crossorigin="anonymous" src="foto/chiesa_2.jpeg">
+        <img id="vetratapreview" crossorigin="anonymous" src="foto/vetratapreview.jpg">
+        <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="cambio360" src="icons/cambio360.png">
+        <audio id="background-music" src="audio/chiesa.mp3" preload="auto"></audio>
       </a-assets>
       
-      <!-- Immagine equirettangolare iniziale -->
-      <a-sky id="sky" src="#chiesa" rotation="0 0 0"></a-sky>
+      <!-- Panorama iniziale -->
+      <a-sky id="sky" src="#chiesa1" rotation="0 0 0" material="shader: flat"></a-sky>
       
       <!-- Musica di sottofondo -->
-      <a-sound id="backgroundSound" src="#background-music" autoplay="true" loop="true" volume="0.8"></a-sound> 
+      <a-entity id="backgroundSound" sound="src: #background-music; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
-      <!-- Link per tornare alla pagina iniziale -->
-      <a-link href="index.html" title="Torna all'ingresso" position="10 0 -6" rotation="0 -50 0" image="#vetratapreview"></a-link>
+      <!-- Link per tornare all'ingresso -->
+      <a-link href="index.html"
+              title="Torna all'ingresso"
+              image="#vetratapreview"
+              position="6 1 -4"
+              rotation="0 -40 0"></a-link>
       
-      <!-- Pulsante per cambiare la visuale -->
-      <a-box color="#000000" depth="0.5" height="0.5" width="0.5"
-             position="0 0.5 -4"
-             onclick="changeScene();">
-        <a-text value="Cambia angolazione" align="center" position="0 0.7 0" color="white"></a-text>
-      </a-box>
+      <!-- Icona per cambiare angolazione -->
+      <a-image id="nextView"
+               class="clickable"
+               src="#cambio360"
+               position="-4 1.5 3"
+               scale="0.7 0.7 0.7"
+               rotation="0 120 0"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -130 12" rotation="0 0 0">
+      <!-- Copertura treppiede + logo -->
+      <a-entity position="10 -180 12">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-          <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 120 0" scale="-1 1 1"></a-image>
-        </a-entity>     
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 120 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- Controlli VR -->
+      <!-- Controller VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
-    
-      <script>
-      let currentScene = 1; // Stato corrente della scena
 
-      function changeScene() {
-        const sky = document.querySelector('#sky'); // Seleziona l'elemento <a-sky>
-        if (currentScene === 1) {
-          sky.setAttribute('src', '#chiesa1'); // Cambia l'immagine del cielo
-          currentScene = 2; // Passa alla scena 2
-        } else {
-          sky.setAttribute('src', '#chiesa'); // Torna alla scena 1
-          currentScene = 1; // Torna alla scena 1
-        }
-      } 
- 
-
-    <!-- Pulsante per disattivare/attivare l'audio -->
-    <div id="audioToggle" style="position: absolute; top: 10px; right: 10px; background: #fff; padding: 10px; border-radius: 50%; cursor: pointer;">
+    <!-- Pulsante HTML per il toggle audio -->
+    <div id="audioToggle"
+         style="position: absolute; top: 10px; right: 10px; background: #fff;
+                padding: 10px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.3);">
       🔊
     </div>
-        
+
+    <script>
+      // Cambio scena 1 ↔ 2
+      const sky = document.getElementById('sky');
+      const nextView = document.getElementById('nextView');
+      let currentScene = 1;
+
+      nextView.addEventListener('click', () => {
+        if (currentScene === 1) {
+          sky.setAttribute('src', '#chiesa2');
+          currentScene = 2;
+        } else {
+          sky.setAttribute('src', '#chiesa1');
+          currentScene = 1;
+        }
+      });
+
+      // Toggle audio
       const audioToggle = document.getElementById('audioToggle');
       const backgroundSound = document.querySelector('#backgroundSound');
       let isSoundOn = true;
@@ -73,10 +85,10 @@
       audioToggle.addEventListener('click', () => {
         isSoundOn = !isSoundOn;
         if (isSoundOn) {
-          backgroundSound.components.sound.playSound(); // Riattiva l'audio
+          backgroundSound.components.sound.playSound();
           audioToggle.textContent = '🔊';
         } else {
-          backgroundSound.components.sound.pauseSound(); // Disattiva l'audio
+          backgroundSound.components.sound.pauseSound();
           audioToggle.textContent = '🔇';
         }
       });
