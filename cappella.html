@@ -76,7 +76,7 @@
         <a-entity id="cam" camera look-controls position="0 1.6 0">
           <a-entity id="uiOverlay" visible="false" position="0 0 -1">
 
-            <!-- sfondo pannello (dimensioni adattate da JS) -->
+            <!-- sfondo pannello -->
             <a-plane id="uiBg"
                      width="1.4" height="2.0"
                      material="color: #ffffff; opacity: 0.0; transparent: true; depthTest: false"></a-plane>
@@ -93,16 +93,16 @@
             <a-image id="uiImg"
                      src="#affrescoImg"
                      position="0 0.45 0.01"
-                     width="0.9" height="0.9"
+                     width="1.1" height="1.1"
                      material="shader: flat; transparent: true"></a-image>
 
-            <!-- testo sotto (sempre a colonna) -->
+            <!-- testo sotto -->
             <a-entity id="uiTextCol" position="-0.55 -0.10 0.01">
-              <a-text value="AUTORE:" color="#000" width="1.1" align="left" ></a-text>
+              <a-text value="AUTORE:" color="#000" width="1.1" align="left"></a-text>
               <a-text value="Francesco Patella (1880-1964)" color="#333" width="1.1" align="left" position="0 -0.16 0"></a-text>
 
               <a-text value="TIPOLOGIA:" color="#000" width="1.1" align="left" position="0 -0.36 0"></a-text>
-              <a-text value="Affresco"   color="#333" width="1.1" align="left" position="0 -0.52 0"></a-text>
+              <a-text value="Affresco" color="#333" width="1.1" align="left" position="0 -0.52 0"></a-text>
 
               <a-text value="DATAZIONE:" color="#000" width="1.1" align="left" position="0 -0.72 0"></a-text>
               <a-text value="1903-1940?" color="#333" width="1.1" align="left" position="0 -0.88 0"></a-text>
@@ -154,41 +154,44 @@
       const uiImg    = document.getElementById('uiImg');
       const uiText   = document.getElementById('uiTextCol');
 
-      // Calibrazione proporzionale al dispositivo/orientamento
       function applyResponsiveLayoutColumn() {
         const w = window.innerWidth;
         const h = window.innerHeight;
         const isPortrait = h >= w;
         const minSide = Math.min(w, h);
 
-        // pannello a colonna a z=-1: mobile più alto, desktop un po' più largo
-        const bgWidth  = isPortrait ? 1.3 : 1.8;
-        const bgHeight = isPortrait ? 2.0 : 1.6;
+        const bgWidth  = isPortrait ? 1.25 : 1.8;
+        const bgHeight = isPortrait ? 1.95 : 1.5;
 
         uiBg.setAttribute('width',  bgWidth);
         uiBg.setAttribute('height', bgHeight);
 
-        // immagine sopra (max ~66% larghezza pannello)
-        const imgW = Math.min(1.2, bgWidth * 0.66);
+        // Immagine ridotta
+        const imgMaxRatio = isPortrait ? 0.55 : 0.45;
+        const imgW = Math.min(isPortrait ? 0.85 : 0.80, bgWidth * imgMaxRatio);
         const imgH = imgW;
         uiImg.setAttribute('width', imgW);
         uiImg.setAttribute('height', imgH);
-        uiImg.setAttribute('position', {x: 0, y: bgHeight/2 - imgH/2 - 0.15, z: 0.01});
+        uiImg.setAttribute('position', {x: 0, y: bgHeight/2 - imgH/2 - 0.14, z: 0.01});
 
-        // X di chiusura in alto a destra
-        uiClose.setAttribute('position', {x: bgWidth/2 - 0.14, y: bgHeight/2 - 0.12, z: 0.01});
+        // X chiusura
+        uiClose.setAttribute('position', {x: bgWidth/2 - 0.12, y: bgHeight/2 - 0.12, z: 0.01});
+        uiClose.setAttribute('scale', '0.11 0.11 0.11');
 
-        // testo sotto l'immagine, margini dinamici
+        // Testo sotto l’immagine
+        const textLeftMargin  = 0.16;
+        const textRightMargin = 0.16;
         const textTopY = uiImg.getAttribute('position').y - imgH/2 - 0.12;
-        uiText.setAttribute('position', {x: -bgWidth/2 + 0.15, y: textTopY, z: 0.01});
+        uiText.setAttribute('position', {x: -bgWidth/2 + textLeftMargin, y: textTopY, z: 0.01});
 
-        // scala testo in base al dispositivo
-        const scaleFactor = minSide < 700 ? 0.85 : 0.7;
-        const wrap = isPortrait ? 26 : 30;
-        const textWidth = Math.min(bgWidth - 0.3, 1.4);
+        const textWidth = Math.max(0.9, bgWidth - (textLeftMargin + textRightMargin));
+        const wrap = isPortrait ? 24 : 26;
+
+        // Testo più piccolo
+        const scaleFactor = isPortrait ? 0.70 : 0.75;
 
         Array.from(uiText.children).forEach((n) => {
-          n.setAttribute('width', textWidth);
+          n.setAttribute('width', Math.min(textWidth, 1.2));
           n.setAttribute('wrap-count', wrap);
           n.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
         });
@@ -213,6 +216,7 @@
     </script>
   </body>
 </html>
+
 
 
 
