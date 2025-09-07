@@ -24,8 +24,10 @@
         <img id="logo" src="logo/villa_ventilj_logo.png">
         <img id="cambio360" src="icons/cambio360.png">
         <img id="infoIcon" src="icons/info.png">
+        <img id="searchIcon" src="icons/search.png">
         <img id="closeIcon" src="icons/close.png">
         <img id="schedaAffresco" src="foto/schedaaffresco.jpg">
+        <img id="affresco2" src="foto/affrescocappella2.jpg">
         <audio id="background-music" src="audio/chiesa.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -35,19 +37,22 @@
       <!-- Musica di sottofondo -->
       <a-entity id="backgroundSound" sound="src: #background-music; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
-      <!-- Link per tornare all’ingresso -->
-      <a-link href="index.html" 
-        title="Torna all'ingresso"
-        image="#vetratapreview"
-        position="6 1 -4" rotation="0 -40 0"></a-link>
+      <!-- Link per tornare indietro -->
+      <a-link href="index.html" image="#vetratapreview"
+              title="Torna all'ingresso"
+              position="6 1 -4" rotation="0 -40 0"></a-link>
 
       <!-- Pulsante cambio angolazione -->
       <a-image id="nextView" class="clickable" src="#cambio360"
                position="-4 1.5 3" scale="0.7 0.7 0.7" rotation="0 120 0"></a-image>
 
-      <!-- Pulsante INFO per aprire la scheda -->
+      <!-- Pulsante INFO (scheda Canva) -->
       <a-image id="infoButton" class="clickable" src="#infoIcon"
                position="-4 4 3" rotation="0 120 0" scale="0.35 0.35 0.35"></a-image>
+
+      <!-- Pulsante FOTO (apre immagine singola) -->
+      <a-image id="photoButton" class="clickable" src="#searchIcon"
+               position="2 5 -1" rotation="0 -50 0" scale="0.4 0.4 0.4"></a-image>
 
       <!-- Logo sul pavimento -->
       <a-entity position="10 -180 12">
@@ -56,18 +61,25 @@
                  rotation="90 120 0"></a-image>
       </a-entity>
 
-      <!-- CAMERA + OVERLAY pannello info -->
+      <!-- CAMERA + OVERLAY scheda info -->
       <a-entity id="rig">
         <a-entity id="cam" camera look-controls position="0 1.6 0">
+          <!-- Overlay scheda Canva -->
           <a-entity id="uiOverlay" visible="false" position="0 0 -1">
-            <!-- sfondo pannello -->
             <a-plane id="uiBg" width="2.2" height="1.6"
                      material="color: #ffffff; opacity: 0.0; transparent: true"></a-plane>
-            <!-- immagine scheda -->
             <a-image id="uiImg" src="#schedaAffresco" position="0 0 0.01"></a-image>
-            <!-- pulsante chiusura -->
             <a-image id="uiClose" class="clickable" src="#closeIcon"
-                     position="0 -0.6 0.1" scale="0.15 0.15 0.15"></a-image>
+                     position="0 -0.6 0.1" scale="0.18 0.18 0.18"></a-image>
+          </a-entity>
+
+          <!-- Overlay foto singola -->
+          <a-entity id="uiOverlayPhoto" visible="false" position="0 0 -1">
+            <a-plane id="uiBgPhoto" width="2.2" height="1.6"
+                     material="color: #000000; opacity: 0.0; transparent: true"></a-plane>
+            <a-image id="uiImgPhoto" src="#affresco2" position="0 0 0.01"></a-image>
+            <a-image id="uiClosePhoto" class="clickable" src="#closeIcon"
+                     position="0 -0.7 0.1" rotation="0 0 0" scale="0.18 0.18 0.18"></a-image>
           </a-entity>
         </a-entity>
       </a-entity>
@@ -81,7 +93,7 @@
     <div id="audioToggle">🔊</div>
 
     <script>
-      // Cambio scena 1 ↔ 2
+      // Cambio scena
       const sky = document.getElementById('sky');
       const nextView = document.getElementById('nextView');
       let currentScene = 1;
@@ -100,7 +112,7 @@
         else { backgroundSound.components.sound.pauseSound(); audioToggle.textContent = '🔇'; }
       });
 
-      // Apertura/chiusura pannello
+      // Overlay scheda Canva
       const infoBtn  = document.getElementById('infoButton');
       const ui       = document.getElementById('uiOverlay');
       const uiBg     = document.getElementById('uiBg');
@@ -120,31 +132,60 @@
       infoBtn.addEventListener('click', openOverlay);
       uiClose.addEventListener('click', closeOverlay);
 
-      // Adatta immagine della scheda al pannello mantenendo proporzioni
+      // Overlay foto singola
+      const photoBtn   = document.getElementById('photoButton');
+      const uiPhoto    = document.getElementById('uiOverlayPhoto');
+      const uiBgPhoto  = document.getElementById('uiBgPhoto');
+      const uiClosePhoto = document.getElementById('uiClosePhoto');
+
+      function openPhoto() {
+        uiPhoto.setAttribute('visible', true);
+        uiBgPhoto.setAttribute('animation__fadein',
+          'property: material.opacity; from: 0; to: 0.95; dur: 250');
+      }
+      function closePhoto() {
+        uiBgPhoto.setAttribute('animation__fadeout',
+          'property: material.opacity; from: 0.95; to: 0; dur: 220');
+        setTimeout(() => uiPhoto.setAttribute('visible', false), 220);
+      }
+
+      photoBtn.addEventListener('click', openPhoto);
+      uiClosePhoto.addEventListener('click', closePhoto);
+
+      // Ridimensiona immagine scheda
       (function fitOverlayImage() {
         const asset = document.querySelector('#schedaAffresco');
         const uiImg = document.getElementById('uiImg');
-        const maxW = 2.0;
-        const maxH = 1.3;
+        const maxW = 2.0, maxH = 1.3;
         const onReady = () => {
-          const w = asset.naturalWidth;
-          const h = asset.naturalHeight;
+          const w = asset.naturalWidth, h = asset.naturalHeight;
           if (!w || !h) return;
-          const ar = w / h;
-          const boxAr = maxW / maxH;
+          const ar = w / h, boxAr = maxW / maxH;
           let targetW, targetH;
-          if (ar > boxAr) {
-            targetW = maxW;
-            targetH = maxW / ar;
-          } else {
-            targetH = maxH;
-            targetW = maxH * ar;
-          }
-          uiImg.setAttribute('width',  targetW.toFixed(3));
+          if (ar > boxAr) { targetW = maxW; targetH = maxW / ar; }
+          else { targetH = maxH; targetW = maxH * ar; }
+          uiImg.setAttribute('width', targetW.toFixed(3));
           uiImg.setAttribute('height', targetH.toFixed(3));
         };
-        if (asset.complete) onReady();
-        else asset.addEventListener('load', onReady);
+        if (asset.complete) onReady(); else asset.addEventListener('load', onReady);
+      })();
+
+      // Ridimensiona immagine foto singola
+      (function fitPhotoImage() {
+        const asset = document.querySelector('#affresco2');
+        const uiImg = document.getElementById('uiImgPhoto');
+        const maxW = 2.0, maxH = 1.3;
+        const onReady = () => {
+          const w = asset.naturalWidth, h = asset.naturalHeight;
+          if (!w || !h) return;
+          const ar = w / h, boxAr = maxW / maxH;
+          let targetW, targetH;
+          if (ar > boxAr) { targetW = maxW; targetH = maxW / ar; }
+          else { targetH = maxH; targetW = maxH * ar; }
+          uiImg.setAttribute('width', targetW.toFixed(3));
+          uiImg.setAttribute('height', targetH.toFixed(3));
+        };
+        if (asset.complete) onReady(); else asset.addEventListener('load', onReady);
       })();
     </script>
   </body>
