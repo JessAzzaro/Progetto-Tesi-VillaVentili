@@ -161,41 +161,36 @@
         const isPortrait = h >= w;
         const minSide = Math.min(w, h);
 
-        // base: pannello colonna a z=-1 che riempie bene il FOV
-        // Desktop/landscape → più largo; Mobile/portrait → più alto
+        // pannello a colonna a z=-1: mobile più alto, desktop un po' più largo
         const bgWidth  = isPortrait ? 1.3 : 1.8;
         const bgHeight = isPortrait ? 2.0 : 1.6;
 
         uiBg.setAttribute('width',  bgWidth);
         uiBg.setAttribute('height', bgHeight);
 
-        // immagine sopra (max 60% larghezza pannello)
+        // immagine sopra (max ~66% larghezza pannello)
         const imgW = Math.min(1.2, bgWidth * 0.66);
-        const imgH = imgW; // quadrata
+        const imgH = imgW;
         uiImg.setAttribute('width', imgW);
         uiImg.setAttribute('height', imgH);
         uiImg.setAttribute('position', {x: 0, y: bgHeight/2 - imgH/2 - 0.15, z: 0.01});
 
-        // X di chiusura in alto a destra del pannello
+        // X di chiusura in alto a destra
         uiClose.setAttribute('position', {x: bgWidth/2 - 0.14, y: bgHeight/2 - 0.12, z: 0.01});
 
         // testo sotto l'immagine, margini dinamici
         const textTopY = uiImg.getAttribute('position').y - imgH/2 - 0.12;
         uiText.setAttribute('position', {x: -bgWidth/2 + 0.15, y: textTopY, z: 0.01});
 
-        // scala testo in base al dispositivo: minSide piccolo → testo più piccolo
+        // scala testo in base al dispositivo
         const scaleFactor = minSide < 700 ? 0.85 : 1.0;
         const wrap = isPortrait ? 26 : 30;
-        const textWidth = Math.min( bgWidth - 0.3, 1.4 );
+        const textWidth = Math.min(bgWidth - 0.3, 1.4);
 
-        Array.from(uiText.children).forEach((n, i) => {
+        Array.from(uiText.children).forEach((n) => {
           n.setAttribute('width', textWidth);
           n.setAttribute('wrap-count', wrap);
           n.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
-
-          // riposiziona verticalmente le righe con step consistente
-          // prime 2 righe 0, -0.16; poi ogni blocco scende ~0.20 
-          )
         });
       }
 
@@ -218,5 +213,6 @@
     </script>
   </body>
 </html>
+
 
 
