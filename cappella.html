@@ -6,7 +6,6 @@
     <meta name="description" content="Cappella privata Villa Ventilj">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
     <style>
       #audioToggle {
         position:absolute; top:10px; right:10px; background:#fff;
@@ -34,21 +33,21 @@
 
         <audio id="background-music" src="audio/chiesa.mp3" preload="auto"></audio>
       </a-assets>
-      
-      <!-- Panorama iniziale -->
+
+      <!-- Panorama -->
       <a-sky id="sky" src="#chiesa1" rotation="0 0 0" material="shader: flat"></a-sky>
-      
-      <!-- Musica di sottofondo -->
+
+      <!-- Audio bg -->
       <a-entity id="backgroundSound" sound="src: #background-music; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
-      <!-- Link per tornare all'ingresso -->
+      <!-- Link back -->
       <a-link href="index.html"
               title="Torna all'ingresso"
               image="#vetratapreview"
               position="6 1 -4"
               rotation="0 -40 0"></a-link>
-      
-      <!-- Icona per cambiare angolazione -->
+
+      <!-- Cambio angolazione -->
       <a-image id="nextView"
                class="clickable"
                src="#cambio360"
@@ -57,65 +56,75 @@
                rotation="0 120 0"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- GRUPPO: icona info + pannello ancorati insieme -->
-      <a-entity id="infoGroup"
-                position="-4 4 3"
-                rotation="0 120 0">
-             
-        <!-- icona info -->
-        <a-image id="infoButton"
-                 class="clickable"
-                 src="#infoIcon"
-                 position="0 0 0"
-                 scale="0.35 0.35 0.35"
-                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+      <!-- ICONA INFO nel punto dell’affresco -->
+      <a-image id="infoButton"
+               class="clickable"
+               src="#infoIcon"
+               position="-4 4 3"
+               rotation="0 120 0"
+               scale="0.35 0.35 0.35"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-        <!-- pannello posizionato DAVANTI all’icona -->
-        <a-entity id="infoPanel" visible="false">
-          <!-- sfondo pannello: leggermente avanti all’icona -->
-          <a-plane id="infoBg"
-                   position="0 0 -1.2"
-                   width="3.5" height="2.2"
-                   material="color: #ffffff; opacity: 0.0"></a-plane>
-
-          <!-- immagine affresco a sinistra -->
-          <a-image src="#affrescoImg"
-                   position="-1.1 0 -1.19"
-                   width="1.4" height="1.4"
-                   material="shader: flat"></a-image>
-
-          <!-- testo a destra -->
-          <a-entity position="0.6 0 -1.19">
-            <a-text value="Autore: Francesco Patella (1880-1964)\nTipologia: Affresco\nDatazione: 1903-1940?\nCollocazione: Cappella, Abside – Villa Ventilj\nDescrizione: Pittura raffigurante il Municipio, l’asilo infantile e le orfanelle."
-                    color="#111"
-                    wrap-count="30"
-                    align="left"
-                    width="1.9"></a-text>
-          </a-entity>
-
-          <!-- pulsante chiudi (X) in alto a destra del pannello -->
-          <a-image id="closeInfo"
-                   class="clickable"
-                   src="#closeIcon"
-                   position="1.55 1.0 -1.18"
-                   scale="0.2 0.2 0.2"
-                   material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-        </a-entity>
-      </a-entity>
-
-      <!-- Copertura treppiedi + logo -->
+      <!-- Logo pavimento -->
       <a-entity position="10 -180 12">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-image src="#logo" position="0 1 0" width="70" height="70"
                  rotation="90 120 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- Controller VR -->
+      <!-- CAMERA + OVERLAY (HUD) -->
+      <a-entity id="rig" position="0 0 0">
+        <a-entity id="cam" camera look-controls position="0 1.6 0">
+          <!-- OVERLAY full-screen: attaccato alla camera (z=-1) -->
+          <a-entity id="uiOverlay" visible="false" position="0 0 -1" opacity="0">
+            <!-- Sfondo semi-trasparente che copre lo schermo -->
+            <a-plane id="uiBg"
+                     width="2.2" height="1.4"
+                     material="color: #ffffff; opacity: 0.0; transparent: true; depthTest: false"></a-plane>
+
+            <!-- X chiusura in alto a destra dell’overlay -->
+            <a-image id="uiClose"
+                     class="clickable"
+                     src="#closeIcon"
+                     position="1.0 0.6 0.01"
+                     scale="0.15 0.15 0.15"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+            <!-- Contenuti: immagine a sinistra, testo a destra -->
+            <a-image src="#affrescoImg"
+                     position="-0.55 0 0.01"
+                     width="0.9" height="0.9"
+                     material="shader: flat; transparent: true"></a-image>
+
+            <!-- Colonna testo (responsive) -->
+            <a-entity position="0.25 0.35 0.01">
+              <!-- Etichette in “grassetto” (maiucolo + colore) + valori -->
+              <a-text value="AUTORE:"  color="#000" width="1.1" align="left"></a-text>
+              <a-text value="Francesco Patella (1880-1964)" color="#333" width="1.1" align="left" position="0 -0.16 0"></a-text>
+
+              <a-text value="TIPOLOGIA:" color="#000" width="1.1" align="left" position="0 -0.36 0"></a-text>
+              <a-text value="Affresco"   color="#333" width="1.1" align="left" position="0 -0.52 0"></a-text>
+
+              <a-text value="DATAZIONE:" color="#000" width="1.1" align="left" position="0 -0.72 0"></a-text>
+              <a-text value="1903-1940?" color="#333" width="1.1" align="left" position="0 -0.88 0"></a-text>
+
+              <a-text value="COLLOCAZIONE:" color="#000" width="1.1" align="left" position="0 -1.08 0"></a-text>
+              <a-text value="Cappella, Abside – Villa Ventilj" color="#333" width="1.1" align="left" position="0 -1.24 0" wrap-count="28"></a-text>
+
+              <a-text value="DESCRIZIONE:" color="#000" width="1.1" align="left" position="0 -1.48 0"></a-text>
+              <a-text value="Pittura raffigurante il Municipio, l’asilo infantile e le orfanelle."
+                      color="#333" width="1.1" align="left" position="0 -1.64 0" wrap-count="28"></a-text>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!-- Controller VR (se usi) -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
-    <!-- Pulsante HTML per il toggle audio -->
+    <!-- Toggle audio -->
     <div id="audioToggle">🔊</div>
 
     <script>
@@ -138,22 +147,26 @@
         else { backgroundSound.components.sound.pauseSound(); audioToggle.textContent = '🔇'; }
       });
 
-      // Pannello info: apri/chiudi con dissolvenza
-      const infoBtn   = document.getElementById('infoButton');
-      const infoPanel = document.getElementById('infoPanel');
-      const infoBg    = document.getElementById('infoBg');
-      const closeBtn  = document.getElementById('closeInfo');
+      // OVERLAY: apri/chiudi con dissolvenza (HUD agganciato alla camera)
+      const infoBtn  = document.getElementById('infoButton');
+      const ui       = document.getElementById('uiOverlay');
+      const uiBg     = document.getElementById('uiBg');
+      const uiClose  = document.getElementById('uiClose');
 
-      infoBtn.addEventListener('click', () => {
-        infoPanel.setAttribute('visible', true);
-        infoBg.setAttribute('animation__fadein',
-          'property: material.opacity; from: 0; to: 0.95; dur: 350; easing: easeInOutQuad');
-      });
+      function openOverlay() {
+        ui.setAttribute('visible', true);
+        uiBg.setAttribute('animation__fadein', 'property: material.opacity; from: 0; to: 0.98; dur: 250; easing: easeOutQuad');
+      }
+      function closeOverlay() {
+        uiBg.setAttribute('animation__fadeout', 'property: material.opacity; from: 0.98; to: 0; dur: 220; easing: easeInQuad');
+        setTimeout(() => ui.setAttribute('visible', false), 220);
+      }
+      infoBtn.addEventListener('click', openOverlay);
+      uiClose.addEventListener('click', closeOverlay);
 
-      closeBtn.addEventListener('click', () => {
-        infoBg.setAttribute('animation__fadeout',
-          'property: material.opacity; from: 0.95; to: 0; dur: 300; easing: easeInOutQuad');
-        setTimeout(() => infoPanel.setAttribute('visible', false), 300);
+      // (Opzionale) Chiudi overlay con ESC
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && ui.getAttribute('visible')) closeOverlay();
       });
     </script>
   </body>
