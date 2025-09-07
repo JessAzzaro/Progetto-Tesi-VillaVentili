@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <style>
-      #audioToggle{
+      #audioToggle {
         position:absolute; top:10px; right:10px; background:#fff;
         padding:10px; border-radius:50%; cursor:pointer;
         box-shadow:0 2px 8px rgba(0,0,0,.3); font-size:18px;
@@ -24,11 +24,11 @@
         <img id="vetratapreview" crossorigin="anonymous" src="foto/vetratapreview.jpg">
         <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
 
-        <!-- icone e immagine affresco -->
+        <!-- icone e scheda creata con Canva -->
         <img id="cambio360" src="icons/cambio360.png">
         <img id="infoIcon"  src="icons/info.png">
         <img id="closeIcon" src="icons/close.png">
-        <img id="affrescoImg" src="foto/affresco_cappella.jpg">
+        <img id="schedaAffresco" src="foto/schedaaffresco.png">
 
         <audio id="background-music" src="audio/chiesa.mp3" preload="auto"></audio>
       </a-assets>
@@ -55,7 +55,7 @@
                rotation="0 120 0"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- ICONA INFO nel punto dell’affresco -->
+      <!-- ICONA INFO -->
       <a-image id="infoButton"
                class="clickable"
                src="#infoIcon"
@@ -71,51 +71,28 @@
                  rotation="90 120 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- CAMERA + OVERLAY (HUD a colonna, responsive) -->
-      <a-entity id="rig" position="0 0 0">
-        <a-entity id="cam" camera look-controls position="0 1.6 0">
-          <a-entity id="uiOverlay" visible="false" position="0 0 -1">
+      <!-- OVERLAY con immagine Canva -->
+      <a-entity id="uiOverlay" visible="false" position="0 0 -1">
 
-            <!-- sfondo pannello -->
-            <a-plane id="uiBg"
-                     width="1.4" height="2.0"
-                     material="color: #ffffff; opacity: 0.0; transparent: true; depthTest: false"></a-plane>
+        <!-- sfondo -->
+        <a-plane id="uiBg"
+                 width="2.2" height="1.6"
+                 material="color: #ffffff; opacity: 0.0; transparent: true; depthTest: false"></a-plane>
 
-            <!-- pulsante chiudi -->
-            <a-image id="uiClose"
-                     class="clickable"
-                     src="#closeIcon"
-                     position="0.62 0.92 0.01"
-                     scale="0.12 0.12 0.12"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <!-- pulsante chiudi -->
+        <a-image id="uiClose"
+                 class="clickable"
+                 src="#closeIcon"
+                 position="1.0 0.7 0.01"
+                 scale="0.15 0.15 0.15"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-            <!-- immagine sopra -->
-            <a-image id="uiImg"
-                     src="#affrescoImg"
-                     position="0 0.45 0.01"
-                     width="1.1" height="1.1"
-                     material="shader: flat; transparent: true"></a-image>
-
-            <!-- testo sotto -->
-            <a-entity id="uiTextCol" position="-0.55 -0.10 0.01">
-              <a-text value="AUTORE:" color="#000" width="1.1" align="left"></a-text>
-              <a-text value="Francesco Patella (1880-1964)" color="#333" width="1.1" align="left" position="0 -0.16 0"></a-text>
-
-              <a-text value="TIPOLOGIA:" color="#000" width="1.1" align="left" position="0 -0.36 0"></a-text>
-              <a-text value="Affresco" color="#333" width="1.1" align="left" position="0 -0.52 0"></a-text>
-
-              <a-text value="DATAZIONE:" color="#000" width="1.1" align="left" position="0 -0.72 0"></a-text>
-              <a-text value="1903-1940?" color="#333" width="1.1" align="left" position="0 -0.88 0"></a-text>
-
-              <a-text value="COLLOCAZIONE:" color="#000" width="1.1" align="left" position="0 -1.08 0"></a-text>
-              <a-text value="Cappella, Abside – Villa Ventilj" color="#333" width="1.1" align="left" position="0 -1.24 0" wrap-count="28"></a-text>
-
-              <a-text value="DESCRIZIONE:" color="#000" width="1.1" align="left" position="0 -1.48 0"></a-text>
-              <a-text value="Pittura raffigurante il Municipio, l’asilo infantile e le orfanelle."
-                      color="#333" width="1.1" align="left" position="0 -1.64 0" wrap-count="28"></a-text>
-            </a-entity>
-          </a-entity>
-        </a-entity>
+        <!-- immagine Canva con affresco + testi -->
+        <a-image id="uiImg"
+                 src="#schedaAffresco"
+                 position="0 0 0.01"
+                 width="2.0" height="1.3"
+                 material="shader: flat; transparent: true"></a-image>
       </a-entity>
 
       <!-- Controller VR -->
@@ -146,59 +123,13 @@
         else { backgroundSound.components.sound.pauseSound(); audioToggle.textContent = '🔇'; }
       });
 
-      // ----- OVERLAY (colonna) responsive -----
+      // Overlay
       const infoBtn  = document.getElementById('infoButton');
       const ui       = document.getElementById('uiOverlay');
       const uiBg     = document.getElementById('uiBg');
       const uiClose  = document.getElementById('uiClose');
-      const uiImg    = document.getElementById('uiImg');
-      const uiText   = document.getElementById('uiTextCol');
-
-      function applyResponsiveLayoutColumn() {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const isPortrait = h >= w;
-        const minSide = Math.min(w, h);
-
-        const bgWidth  = isPortrait ? 1.25 : 1.8;
-        const bgHeight = isPortrait ? 1.95 : 1.5;
-
-        uiBg.setAttribute('width',  bgWidth);
-        uiBg.setAttribute('height', bgHeight);
-
-        // Immagine ridotta
-        const imgMaxRatio = isPortrait ? 0.55 : 0.45;
-        const imgW = Math.min(isPortrait ? 0.85 : 0.80, bgWidth * imgMaxRatio);
-        const imgH = imgW;
-        uiImg.setAttribute('width', imgW);
-        uiImg.setAttribute('height', imgH);
-        uiImg.setAttribute('position', {x: 0, y: bgHeight/2 - imgH/2 - 0.14, z: 0.01});
-
-        // X chiusura
-        uiClose.setAttribute('position', {x: bgWidth/2 - 0.12, y: bgHeight/2 - 0.12, z: 0.01});
-        uiClose.setAttribute('scale', '0.11 0.11 0.11');
-
-        // Testo sotto l’immagine
-        const textLeftMargin  = 0.16;
-        const textRightMargin = 0.16;
-        const textTopY = uiImg.getAttribute('position').y - imgH/2 - 0.12;
-        uiText.setAttribute('position', {x: -bgWidth/2 + textLeftMargin, y: textTopY, z: 0.01});
-
-        const textWidth = Math.max(0.9, bgWidth - (textLeftMargin + textRightMargin));
-        const wrap = isPortrait ? 24 : 26;
-
-        // Testo più piccolo
-        const scaleFactor = isPortrait ? 0.70 : 0.75;
-
-        Array.from(uiText.children).forEach((n) => {
-          n.setAttribute('width', Math.min(textWidth, 1.2));
-          n.setAttribute('wrap-count', wrap);
-          n.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
-        });
-      }
 
       function openOverlay() {
-        applyResponsiveLayoutColumn();
         ui.setAttribute('visible', true);
         uiBg.setAttribute('animation__fadein',
           'property: material.opacity; from: 0; to: 0.98; dur: 250; easing: easeOutQuad');
@@ -211,11 +142,10 @@
 
       infoBtn.addEventListener('click', openOverlay);
       uiClose.addEventListener('click', closeOverlay);
-      window.addEventListener('resize', () => { if (ui.getAttribute('visible')) applyResponsiveLayoutColumn(); });
-      window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && ui.getAttribute('visible')) closeOverlay(); });
     </script>
   </body>
 </html>
+
 
 
 
