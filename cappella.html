@@ -6,13 +6,13 @@
     <meta name="description" content="Cappella privata Villa Ventilj">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-   
+
     <style>
       #audioToggle {
         position:absolute; top:10px; right:10px; background:#fff;
         padding:10px; border-radius:50%; cursor:pointer;
         box-shadow:0 2px 8px rgba(0,0,0,.3);
-        font-size: 18px;
+        font-size:18px;
       }
     </style>
   </head>
@@ -57,46 +57,50 @@
                rotation="0 120 0"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- Hotspot INFO sull’affresco -->
-      <a-image id="infoButton"
-               class="clickable"
-               src="#infoIcon"
-               position="-4 4 3"
-               rotation="0 120 0"
-               scale="0.35 0.35 0.35"
-               material="shader: flat; transparent: true; alphaTest: 0.05">
-      </a-image>
-
-      <!-- Pannello informativo con dissolvenza -->
-      <a-entity id="infoPanel" visible="false">
-        <!-- sfondo pannello -->
-        <a-plane id="infoBg"
-                 position="0 1.5 -1.5"
-                 width="3.5" height="2.2"
-                 material="color: #ffffff; opacity: 0.0"></a-plane>
-
-        <!-- immagine affresco -->
-        <a-image src="#affrescoImg"
-                 position="-1.1 1.5 -1.49"
-                 width="1.4" height="1.4"
-                 material="shader: flat"></a-image>
-
-        <!-- testo didascalia -->
-        <a-entity position="0.6 1.5 -1.49">
-          <a-text value="Autore: Francesco Patella (1880-1964)\nTipologia: Affresco\nDatazione: 1903-1940?\nCollocazione: Cappella, Abside – Villa Ventilj\nDescrizione: Pittura raffigurante il Municipio, l’asilo infantile e le orfanelle."
-                  color="#111"
-                  wrap-count="30"
-                  align="left"
-                  width="1.9"></a-text>
-        </a-entity>
-
-        <!-- pulsante chiudi (X) -->
-        <a-image id="closeInfo"
+      <!-- GRUPPO: icona info + pannello ancorati insieme -->
+      <a-entity id="infoGroup"
+                position="-4 4 3"
+                rotation="0 120 0">
+             
+        <!-- icona info -->
+        <a-image id="infoButton"
                  class="clickable"
-                 src="#closeIcon"
-                 position="1.55 2.45 -1.48"
-                 scale="0.2 0.2 0.2"
+                 src="#infoIcon"
+                 position="0 0 0"
+                 scale="0.35 0.35 0.35"
                  material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+        <!-- pannello posizionato DAVANTI all’icona -->
+        <a-entity id="infoPanel" visible="false">
+          <!-- sfondo pannello: leggermente avanti all’icona -->
+          <a-plane id="infoBg"
+                   position="0 0 -1.2"
+                   width="3.5" height="2.2"
+                   material="color: #ffffff; opacity: 0.0"></a-plane>
+
+          <!-- immagine affresco a sinistra -->
+          <a-image src="#affrescoImg"
+                   position="-1.1 0 -1.19"
+                   width="1.4" height="1.4"
+                   material="shader: flat"></a-image>
+
+          <!-- testo a destra -->
+          <a-entity position="0.6 0 -1.19">
+            <a-text value="Autore: Francesco Patella (1880-1964)\nTipologia: Affresco\nDatazione: 1903-1940?\nCollocazione: Cappella, Abside – Villa Ventilj\nDescrizione: Pittura raffigurante il Municipio, l’asilo infantile e le orfanelle."
+                    color="#111"
+                    wrap-count="30"
+                    align="left"
+                    width="1.9"></a-text>
+          </a-entity>
+
+          <!-- pulsante chiudi (X) in alto a destra del pannello -->
+          <a-image id="closeInfo"
+                   class="clickable"
+                   src="#closeIcon"
+                   position="1.55 1.0 -1.18"
+                   scale="0.2 0.2 0.2"
+                   material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        </a-entity>
       </a-entity>
 
       <!-- Copertura treppiedi + logo -->
@@ -135,10 +139,10 @@
       });
 
       // Pannello info: apri/chiudi con dissolvenza
-      const infoBtn  = document.getElementById('infoButton');
+      const infoBtn   = document.getElementById('infoButton');
       const infoPanel = document.getElementById('infoPanel');
-      const infoBg   = document.getElementById('infoBg');
-      const closeBtn = document.getElementById('closeInfo');
+      const infoBg    = document.getElementById('infoBg');
+      const closeBtn  = document.getElementById('closeInfo');
 
       infoBtn.addEventListener('click', () => {
         infoPanel.setAttribute('visible', true);
@@ -154,4 +158,3 @@
     </script>
   </body>
 </html>
-
