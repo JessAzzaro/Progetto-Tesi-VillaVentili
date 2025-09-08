@@ -25,7 +25,7 @@
         <img id="museopreview" crossorigin="anonymous" src="foto/museopreview.jpg">
         <img id="salazena360" crossorigin="anonymous" src="foto/salazena360.jpeg">
         <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
-        <img id="icon3d" src="icons/icona3d.gif">
+        <img id="icon3d" src="icons/icona3d.png">
         <img id="closeIcon" src="icons/close.png">
         <a-asset-item id="statuaZena" src="model/zena3d.glb"></a-asset-item>
       </a-assets>
@@ -45,24 +45,25 @@
                class="clickable"
                src="#icon3d"
                position="2 1.6 -3"
+               rotation="0 -2 0"
                scale="0.7 0.7 0.7"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- Gruppo modello ) -->
-      <a-entity id="zenaGroup" visible="false">
+      <!-- Gruppo modello (si apre davanti all'icona) -->
+      <a-entity id="zenaGroup" visible="false" position="4 -3 -1">
         <a-entity light="type: ambient; intensity: 0.7"></a-entity>
         <a-entity light="type: directional; intensity: 1" position="1 2 1"></a-entity>
 
         <a-entity id="zenaModel"
                   gltf-model="#statuaZena"
-                  position="0 1.2 -2.5"
-                  rotation="0 30 0"
+                  position="0 0 0"
+                  rotation="0 45 0"
                   scale="0.4 0.4 0.4"></a-entity>
 
         <a-image id="closeZena3D"
                  class="clickable"
                  src="#closeIcon"
-                 position="0 0.2 -1.2"
+                 position="0 0.2 0.8"
                  scale="0.25 0.25 0.25"
                  material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
       </a-entity>
@@ -96,4 +97,5 @@
     </script>
   </body>
 </html>
+
 
