@@ -7,11 +7,6 @@
 
     <!-- A-Frame core -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
-    <!-- Componenti -->
-    <script src="js/components/aframe-tooltip-component.js"></script>
-    <script src="js/components/camera-position.js"></script>
-    <script src="js/components/link-controls.js"></script>
   </head>
   <body>
     <a-scene
@@ -64,7 +59,8 @@
                       gltf-model="#statuaZena"
                       position="0 -0.2 0.2"
                       rotation="0 30 0"
-                      scale="0.35 0.35 0.35"></a-entity>
+                      scale="0.35 0.35 0.35"
+                      drag-rotate="speed: 0.25"></a-entity>
 
             <!-- Didascalia -->
             <a-text id="zenaCaption"
@@ -95,10 +91,6 @@
                    rotation="90 205 0" scale="-1 1 1"></a-image>
         </a-entity>
       </a-entity>
-
-      <!-- Controller VR -->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
     <script>
@@ -107,19 +99,24 @@
       const bg       = document.getElementById('zenaBg');
       const btnClose = document.getElementById('closeZena3D');
       const model    = document.getElementById('zenaModel');
+      const cam      = document.getElementById('cam');
 
       // apertura overlay
       btnOpen.addEventListener('click', () => {
         ov.setAttribute('visible', true);
         bg.setAttribute('animation__fadein',
           'property: material.opacity; from: 0; to: 0.95; dur: 250; easing: easeOutQuad');
+        cam.removeAttribute('look-controls'); // blocca panorama
       });
 
       // chiusura overlay
       btnClose.addEventListener('click', () => {
         bg.setAttribute('animation__fadeout',
           'property: material.opacity; from: 0.95; to: 0; dur: 220; easing: easeInQuad');
-        setTimeout(() => ov.setAttribute('visible', false), 220);
+        setTimeout(() => {
+          ov.setAttribute('visible', false);
+          cam.setAttribute('look-controls', ''); // riattiva panorama
+        }, 220);
       });
 
       // ZOOM con mouse wheel
@@ -154,9 +151,33 @@
         model.setAttribute('scale', `${scale} ${scale} ${scale}`);
         startDist = newDist;
       });
+
+      // componente per drag-rotate
+      AFRAME.registerComponent('drag-rotate', {
+        schema: { speed: {type: 'number', default: 0.25} },
+        init: function () {
+          this.dragging = false;
+          this.startX = 0;
+          this.startRotY = 0;
+          const canvas = this.el.sceneEl.canvas;
+          canvas.addEventListener('mousedown', (e) => {
+            if (!ov.getAttribute('visible')) return;
+            this.dragging = true;
+            this.startX = e.clientX;
+            this.startRotY = this.el.getAttribute('rotation').y;
+          });
+          window.addEventListener('mousemove', (e) => {
+            if (!this.dragging) return;
+            const dx = e.clientX - this.startX;
+            this.el.setAttribute('rotation', {x:0, y:this.startRotY + dx * this.data.speed, z:0});
+          });
+          window.addEventListener('mouseup', () => this.dragging = false);
+        }
+      });
     </script>
   </body>
 </html>
+
 
 
 
