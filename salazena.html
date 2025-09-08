@@ -2,58 +2,98 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Visita-Sala 1</title>
-    <meta name="description" content="Museo Pagliaccetti- Villa Ventilj Mosciano Sant'Angelo">
+    <title>Visita - Sala 1</title>
+    <meta name="description" content="Museo Pagliaccetti - Villa Ventilj Mosciano Sant'Angelo">
+
+    <!-- A-Frame core -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- Componenti -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+
+      <!-- Asset -->
       <a-assets>
-      <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
-      <img id="salazena360" crossOrigin="anonymous" src="foto/salazena360.jpeg">
-      <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        
+        <img id="museopreview" crossorigin="anonymous" src="foto/museopreview.jpg">
+        <img id="salazena360" crossorigin="anonymous" src="foto/salazena360.jpeg">
+        <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="icon3d" src="icons/icona3d.gif">
+        <img id="closeIcon" src="icons/close.png">
+        <a-asset-item id="statuaZena" src="model/zena3d.glb"></a-asset-item>
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#salazena360"
-             rotation="0 0 0"></a-sky>
-      
-      <!-- Link ad altra stanza torna indietro -->
+
+      <!-- Panorama -->
+      <a-sky src="#salazena360" rotation="0 0 0"></a-sky>
+
+      <!-- Link torna indietro -->
       <a-link href="museopagliaccetti.html"
               title="Torna indietro"
               image="#museopreview"
               position="-8 0 3"
               rotation="0 -80 0"></a-link>
-      
-      
-      <!-- Cilindro per coprire il treppiedi con testo -->
+
+      <!-- Icona per aprire il modello -->
+      <a-image id="openZena3D"
+               class="clickable"
+               src="#icon3d"
+               position="2 1.6 -3"
+               scale="0.7 0.7 0.7"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- Gruppo modello ) -->
+      <a-entity id="zenaGroup" visible="false">
+        <a-entity light="type: ambient; intensity: 0.7"></a-entity>
+        <a-entity light="type: directional; intensity: 1" position="1 2 1"></a-entity>
+
+        <a-entity id="zenaModel"
+                  gltf-model="#statuaZena"
+                  position="0 1.2 -2.5"
+                  rotation="0 30 0"
+                  scale="0.4 0.4 0.4"></a-entity>
+
+        <a-image id="closeZena3D"
+                 class="clickable"
+                 src="#closeIcon"
+                 position="0 0.2 -1.2"
+                 scale="0.25 0.25 0.25"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+      </a-entity>
+
+      <!-- Copertura treppiede -->
       <a-entity position="10 -130 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
-      </a-entity>      
+          <a-image src="#logo" position="0 0 0" width="70" height="70"
+                   rotation="90 205 0" scale="-1 1 1"></a-image>
+        </a-entity>
+      </a-entity>
 
-
-     
-    
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
+      <!-- Controller VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
+    <script>
+      const btnOpen  = document.getElementById('openZena3D');
+      const grp      = document.getElementById('zenaGroup');
+      const btnClose = document.getElementById('closeZena3D');
+
+      btnOpen.addEventListener('click', () => {
+        grp.setAttribute('visible', true);
+      });
+
+      btnClose.addEventListener('click', () => {
+        grp.setAttribute('visible', false);
+      });
+    </script>
   </body>
 </html>
+
