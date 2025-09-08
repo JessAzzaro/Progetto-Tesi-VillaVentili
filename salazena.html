@@ -59,12 +59,13 @@
             <a-plane id="zenaBg" width="2.5" height="2"
                      material="color: #000000; opacity: 0.0; transparent: true"></a-plane>
 
-            <!-- modello al centro -->
+            <!-- modello al centro (con drag-rotate) -->
             <a-entity id="zenaModel"
                       gltf-model="#statuaZena"
                       position="0 -0.2 0.2"
                       rotation="0 30 0"
-                      scale="0.35 0.35 0.35"></a-entity>
+                      scale="0.35 0.35 0.35"
+                      drag-rotate="speed: 0.25"></a-entity>
 
             <!-- X di chiusura in basso -->
             <a-image id="closeZena3D"
@@ -79,7 +80,7 @@
       </a-entity>
 
       <!-- Copertura treppiede (forzata bianca con shader flat + emissive) -->
-      <a-entity position="10 -180 12" rotation="0 0 0">
+      <a-entity position="10 -130 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5"
                     material="color: #ffffff; shader: flat; emissive: #ffffff"></a-cylinder>
         <a-entity position="0 1 0">
@@ -111,9 +112,73 @@
           'property: material.opacity; from: 0.95; to: 0; dur: 220; easing: easeInQuad');
         setTimeout(() => ov.setAttribute('visible', false), 220);
       });
+
+      // ---- Componente per ruotare con drag (mouse o touch) ----
+      AFRAME.registerComponent('drag-rotate', {
+        schema: { speed: {type: 'number', default: 0.25} },
+        init: function () {
+          this.dragging = false;
+          this.startX = 0;
+          this.startY = 0;
+          this.startRot = {x:0, y:0};
+          // bind
+          this.onDown = this.onDown.bind(this);
+          this.onMove = this.onMove.bind(this);
+          this.onUp   = this.onUp.bind(this);
+
+          const canvas = this.el.sceneEl.canvas;
+          // In caso il canvas non sia pronto subito
+          if (!canvas) {
+            this.el.sceneEl.addEventListener('render-target-loaded', () => {
+              this.addListeners(this.el.sceneEl.canvas);
+            });
+          } else {
+            this.addListeners(canvas);
+          }
+        },
+        addListeners: function (target) {
+          target.addEventListener('pointerdown', this.onDown);
+          window.addEventListener('pointermove', this.onMove);
+          window.addEventListener('pointerup',   this.onUp);
+        },
+        remove: function () {
+          const canvas = this.el.sceneEl && this.el.sceneEl.canvas;
+          if (canvas) {
+            canvas.removeEventListener('pointerdown', this.onDown);
+          }
+          window.removeEventListener('pointermove', this.onMove);
+          window.removeEventListener('pointerup',   this.onUp);
+        },
+        onDown: function (e) {
+          // ruota solo se l'overlay è visibile
+          const overlayVisible = this.el.closest('#zenaOverlay')?.getAttribute('visible');
+          if (!overlayVisible) return;
+
+          this.dragging = true;
+          this.startX = e.clientX;
+          this.startY = e.clientY;
+          const r = this.el.getAttribute('rotation');
+          this.startRot = {x: r.x, y: r.y};
+        },
+        onMove: function (e) {
+          if (!this.dragging) return;
+          const dx = e.clientX - this.startX;
+          const dy = e.clientY - this.startY;
+
+          // aggiorna yaw con dx e pitch con dy (con clamp sul pitch)
+          const yaw   = this.startRot.y + dx * this.data.speed;
+          let   pitch = this.startRot.x - dy * (this.data.speed * 0.6);
+          // limita l'inclinazione per non capovolgere
+          pitch = Math.max(-45, Math.min(45, pitch));
+
+          this.el.setAttribute('rotation', `${pitch} ${yaw} 0`);
+        },
+        onUp: function () { this.dragging = false; }
+      });
     </script>
   </body>
 </html>
+
 
 
 
