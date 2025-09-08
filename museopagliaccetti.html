@@ -5,28 +5,27 @@
     <title>Museo Pagliaccetti</title>
     <meta name="description" content="Museo Pagliaccetti- Villa Ventilj Mosciano Sant'Angelo">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
     <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
     <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+    <!-- Environment component -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@^1.3.3/dist/aframe-environment-component.min.js"></script>
+  </head>
   <body>
     <a-scene
       raycaster="far: 100; objects: [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
+
       <!-- Componenti della pagina -->
       <a-assets>
         <img id="salaadue" crossOrigin="anonymous" src="foto/disperatopreview.jpg">
         <img id="museoingresso" crossOrigin="anonymous" src="foto/museo_ingresso.jpeg">
         <img id="salazenapreview" crossOrigin="anonymous" src="foto/zenapreview.jpg">
         <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        
       </a-assets>
       
       <!-- Immagine equirettangolare -->
@@ -40,17 +39,17 @@
               position="1 0 10"
               rotation="0 20 0"></a-link>
       
-        <!-- Link ad altra stanza Sala 1-->
+      <!-- Link ad altra stanza Sala 1-->
       <a-link href="salazena.html"
               title="Visita-Sala 1"
               image="#salazenapreview"
               position="4 0 -4"
               rotation="0 -20 0"></a-link>
 
-        <!-- Link ad altra stanza Sala 2-->
+      <!-- Link ad altra stanza Sala 2-->
       <a-link href="saladue.html"
               title="Visita-Sala 2"
-              image="#saladuepreview"
+              image="#salaadue"
               position="-7 0 0"
               rotation="0 90 0"></a-link>
       
@@ -58,16 +57,14 @@
       <a-entity position="10 -180 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
-      </a-entity>      
-
-
-     
+          <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
+        </a-entity>      
+      </a-entity>
     
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
+      <!-- Controlli VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
-
   </body>
 </html>
+
