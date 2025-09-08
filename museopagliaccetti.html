@@ -41,7 +41,7 @@
         <img id="closeIcon"  src="icons/close.png">
 
         <!-- foto di dettaglio  -->
-        <img id="ph7260" src="foto/_A7A7260.jpg">
+        <img id="ph7260" src="foto/affrescocappella2.jpg">
         <img id="ph7261" src="foto/_A7A7261.jpg">
         <img id="ph7263" src="foto/_A7A7263.jpg">
         <img id="ph7264" src="foto/_A7A7264.jpg">
@@ -77,7 +77,7 @@
               position="-7 0 0"
               rotation="0 90 0"></a-link>
 
-      <!-- Icone foto  (posizioni mantenute) -->
+      <!-- Icone foto -->
       <a-image id="photoBtn1" class="clickable" src="#searchIcon"
                position="-3 1.6 6" rotation="0 15 0" scale="0.45 0.45 0.45"></a-image>
 
@@ -106,40 +106,44 @@
         <a-entity id="cam" camera look-controls position="0 1.6 0">
 
           <!-- Overlay 1 (ph7260) -->
-          <a-entity id="ov1" visible="false" position="0 0 -1">
-            <a-plane id="ov1bg" width="2.2" height="1.6"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-            <a-image id="ov1img" src="#ph7260" position="0 0 0.01"></a-image>
-            <a-image id="ov1x" class="clickable" src="#closeIcon"
-                     position="0 -0.5 0.2" scale="0.20 0.20 0.20"></a-image>
-          </a-entity>
+<a-entity id="ov1" visible="false" position="0 0 -1">
+  <a-plane id="ov1bg" width="2.2" height="1.6"
+           material="color:#000; opacity:0.0; transparent:true"></a-plane>
+  <a-image id="ov1img" src="#ph7260" position="0 0 0.01"
+           material="shader: flat; transparent: true"></a-image>
+  <a-image id="ov1x" class="clickable" src="#closeIcon"
+           position="0 -0.5 0.2" scale="0.20 0.20 0.20"></a-image>
+</a-entity>
 
-          <!-- Overlay 2 (ph7261) -->
-          <a-entity id="ov2" visible="false" position="0 0 -1">
-            <a-plane id="ov2bg" width="2.2" height="1.6"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-            <a-image id="ov2img" src="#ph7261" position="0 0 0.01"></a-image>
-            <a-image id="ov2x" class="clickable" src="#closeIcon"
-                     position="0 -0.5 0.2" scale="0.22 0.22 0.22"></a-image>
-          </a-entity>
+<!-- Overlay 2 (ph7261) -->
+<a-entity id="ov2" visible="false" position="0 0 -1">
+  <a-plane id="ov2bg" width="2.2" height="1.6"
+           material="color:#000; opacity:0.0; transparent:true"></a-plane>
+  <a-image id="ov2img" src="#ph7261" position="0 0 0.01"
+           material="shader: flat; transparent: true"></a-image>
+  <a-image id="ov2x" class="clickable" src="#closeIcon"
+           position="0 -0.5 0.2" scale="0.22 0.22 0.22"></a-image>
+</a-entity>
 
-          <!-- Overlay 3 (ph7263) -->
-          <a-entity id="ov3" visible="false" position="0 0 -1">
-            <a-plane id="ov3bg" width="2.2" height="1.6"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-            <a-image id="ov3img" src="#ph7263" position="0 0 0.01"></a-image>
-            <a-image id="ov3x" class="clickable" src="#closeIcon"
-                     position="0 -0.6 0.2" scale="0.21 0.21 0.21"></a-image>
-          </a-entity>
+<!-- Overlay 3 (ph7263) -->
+<a-entity id="ov3" visible="false" position="0 0 -1">
+  <a-plane id="ov3bg" width="2.2" height="1.6"
+           material="color:#000; opacity:0.0; transparent:true"></a-plane>
+  <a-image id="ov3img" src="#ph7263" position="0 0 0.01"
+           material="shader: flat; transparent: true"></a-image>
+  <a-image id="ov3x" class="clickable" src="#closeIcon"
+           position="0 -0.5 0.2" scale="0.21 0.21 0.21"></a-image>
+</a-entity>
 
-          <!-- Overlay 4 (ph7264) -->
-          <a-entity id="ov4" visible="false" position="0 0 -1">
-            <a-plane id="ov4bg" width="2.2" height="1.6"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-            <a-image id="ov4img" src="#ph7264" position="0 0 0.01"></a-image>
-            <a-image id="ov4x" class="clickable" src="#closeIcon"
-                     position="0 -0.5 0.2" scale="0.21 0.21 0.21"></a-image>
-          </a-entity>
+<!-- Overlay 4 (ph7264) -->
+<a-entity id="ov4" visible="false" position="0 0 -1">
+  <a-plane id="ov4bg" width="2.2" height="1.6"
+           material="color:#000; opacity:0.0; transparent:true"></a-plane>
+  <a-image id="ov4img" src="#ph7264" position="0 0 0.01"
+           material="shader: flat; transparent: true"></a-image>
+  <a-image id="ov4x" class="clickable" src="#closeIcon"
+           position="0 -0.5 0.2" scale="0.21 0.21 0.21"></a-image>
+</a-entity>
 
         </a-entity>
       </a-entity>
