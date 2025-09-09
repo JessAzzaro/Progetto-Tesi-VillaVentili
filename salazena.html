@@ -30,10 +30,8 @@
 
         <!-- icone e immagini per i tre overlay foto -->
         <img id="searchIcon" src="icons/search.png">
-        <img id="phA" crossorigin="anonymous" src="foto/_A7A7376.jpg">
-        <img id="phB" crossorigin="anonymous" src="foto/_A7A7378.jpg">
-        <img id="phC" crossorigin="anonymous" src="foto/_A7A7379.jpg">
-
+        <!-- le immagini vengono caricate direttamente negli <a-image> degli overlay -->
+        
         <a-asset-item id="statuaZena" src="model/zena3d.glb"></a-asset-item>
       </a-assets>
 
@@ -56,16 +54,16 @@
                scale="0.7 0.7 0.7"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <!-- Tre icone APRI FOTO -->
-      <a-image id="openPhotoA" class="clickable" src="#searchIcon"
+      <!-- Tre icone APRI FOTO  -->
+      <a-image id="photoBtnA" class="clickable" src="#searchIcon"
                position="0 1 -3" rotation="1 -30 0" scale="0.6 0.6 0.6"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <a-image id="openPhotoB" class="clickable" src="#searchIcon"
+      <a-image id="photoBtnB" class="clickable" src="#searchIcon"
                position="-1.0 -1 -3" rotation="1 -30 0" scale="0.6 0.6 0.6"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <a-image id="openPhotoC" class="clickable" src="#searchIcon"
+      <a-image id="photoBtnC" class="clickable" src="#searchIcon"
                position="-2.5 -1 -3" rotation="1 -30 0" scale="0.6 0.6 0.6"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
@@ -99,55 +97,31 @@
                      material="shader: flat; transparent: true; alphaTest: 0.05; depthTest: false"></a-image>
           </a-entity>
 
-          <!-- Overlay FOTO A -->
-          <a-entity id="photoOverlayA" visible="false" position="0 0 -1">
-            <a-plane id="photoBgA" width="2.5" height="2"
+          <!-- OVERLAY FOTO A -->
+          <a-entity id="ovA" visible="false" position="0 0 -1">
+            <a-plane id="ovAbg" width="2.2" height="1.6"
                      material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="photoImgA" src="#phA" position="0 0.10 0.01"
-                     material="shader: flat; transparent: true"></a-image>
-
-            <a-text value="Opera – Museo Raffaello Pagliaccetti"
-                    align="center" color="#ffffff" width="1.6"
-                    position="0 -0.45 0.02"></a-text>
-
-            <a-image id="closePhotoA" class="clickable" src="#closeIcon"
-                     position="0 -0.50 0.20" scale="0.22 0.22 0.22"
-                     material="shader: flat; transparent: true; alphaTest: 0.05; depthTest:false"></a-image>
+            <a-image id="ovAimg" src="foto/_A7A7376.jpg" position="0 0 0.01"></a-image>
+            <a-image id="ovAx" class="clickable" src="#closeIcon"
+                     position="0 -0.5 0.2" scale="0.22 0.22 0.22"></a-image>
           </a-entity>
 
-          <!-- Overlay FOTO B -->
-          <a-entity id="photoOverlayB" visible="false" position="0 0 -1">
-            <a-plane id="photoBgB" width="2.5" height="2"
+          <!-- OVERLAY FOTO B -->
+          <a-entity id="ovB" visible="false" position="0 0 -1">
+            <a-plane id="ovBbg" width="2.2" height="1.6"
                      material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="photoImgB" src="#phB" position="0 0.05 0.01"
-                     material="shader: flat; transparent: true"></a-image>
-
-            <a-text value="Opera – Museo Raffaello Pagliaccetti"
-                    align="center" color="#ffffff" width="1.6"
-                    position="0 -0.50 0.02"></a-text>
-
-            <a-image id="closePhotoB" class="clickable" src="#closeIcon"
-                     position="0 -0.55 0.19" scale="0.24 0.24 0.24"
-                     material="shader: flat; transparent: true; alphaTest: 0.05; depth:false"></a-image>
+            <a-image id="ovBimg" src="foto/_A7A7378.jpg" position="0 0 0.01"></a-image>
+            <a-image id="ovBx" class="clickable" src="#closeIcon"
+                     position="0 -0.5 0.2" scale="0.22 0.22 0.22"></a-image>
           </a-entity>
 
-          <!-- Overlay FOTO C -->
-          <a-entity id="photoOverlayC" visible="false" position="0 0 -1">
-            <a-plane id="photoBgC" width="2.5" height="2"
+          <!-- OVERLAY FOTO C -->
+          <a-entity id="ovC" visible="false" position="0 0 -1">
+            <a-plane id="ovCbg" width="2.2" height="1.6"
                      material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="photoImgC" src="#phC" position="0 0.05 0.01"
-                     material="shader: flat; transparent: true"></a-image>
-
-            <a-text value="Opera – Museo Raffaello Pagliaccetti"
-                    align="center" color="#ffffff" width="1.6"
-                    position="0 -0.46 0.02"></a-text>
-
-            <a-image id="closePhotoC" class="clickable" src="#closeIcon"
-                     position="0 -0.55 0.20" scale="0.22 0.22 0.22"
-                     material="shader: flat; transparent: true; alphaTest: 0.05; depth:false"></a-image>
+            <a-image id="ovCimg" src="foto/_A7A7379.jpg" position="0 0 0.01"></a-image>
+            <a-image id="ovCx" class="clickable" src="#closeIcon"
+                     position="0 -0.5 0.2" scale="0.22 0.22 0.22"></a-image>
           </a-entity>
 
         </a-entity>
@@ -171,7 +145,7 @@
     <script>
       const cam = document.getElementById('cam');
 
-      /* -------- Overlay 3D: Zena (rotazione + zoom) -------- */
+      /* -------- Overlay 3D: Zena (rotazione drag + zoom, blocco panorama) -------- */
       const btnOpenZ  = document.getElementById('openZena3D');
       const ovZ       = document.getElementById('zenaOverlay');
       const bgZ       = document.getElementById('zenaBg');
@@ -253,54 +227,38 @@
       window.addEventListener('touchend', endDrag);
       window.addEventListener('touchcancel', endDrag);
 
-      /* -------- Overlay FOTO -------- */
-      function setupPhotoOverlay(openId, overlayId, bgId, imgEntityId) {
-        const openBtn = document.getElementById(openId);
-        const ov      = document.getElementById(overlayId);
-        const bg      = document.getElementById(bgId);
-        const close   = ov.querySelector('.clickable[src="#closeIcon"]');
-        const imgEnt  = document.getElementById(imgEntityId);
+      /* -------- Overlay FOTO stile “cappella”: semplice apri/chiudi -------- */
+      function setupOverlay(btnId, ovId, bgId, xId){
+        const btn = document.getElementById(btnId);
+        const ov  = document.getElementById(ovId);
+        const bg  = document.getElementById(bgId);
+        const x   = document.getElementById(xId);
 
-        openBtn.addEventListener('click', () => {
+        btn.addEventListener('click', () => {
           ov.setAttribute('visible', true);
           cam.components['look-controls']?.pause();
           bg.setAttribute('animation__fadein',
-            'property: material.opacity; from: 0; to: 0.95; dur: 250; easing: easeOutQuad');
+            'property: material.opacity; from: 0; to: 0.95; dur: 250');
         });
 
-        close.addEventListener('click', () => {
+        x.addEventListener('click', () => {
           bg.setAttribute('animation__fadeout',
-            'property: material.opacity; from: 0.95; to: 0; dur: 220; easing: easeInQuad');
+            'property: material.opacity; from: 0.95; to: 0; dur: 220');
           setTimeout(() => {
             ov.setAttribute('visible', false);
             cam.components['look-controls']?.play();
           }, 220);
         });
-
-        // fit immagine
-        const assetId = imgEnt.getAttribute('src');
-        const asset   = document.querySelector(assetId);
-        const maxW = 2.0, maxH = 1.3;
-
-        const fit = () => {
-          const w = asset.naturalWidth, h = asset.naturalHeight;
-          if (!w || !h) return;
-          const ar = w / h, boxAr = maxW / maxH;
-          let W, H;
-          if (ar > boxAr) { W = maxW; H = maxW / ar; }
-          else            { H = maxH; W = maxH * ar; }
-          imgEnt.setAttribute('width',  W.toFixed(3));
-          imgEnt.setAttribute('height', H.toFixed(3));
-        };
-        if (asset.complete) fit(); else asset.addEventListener('load', fit);
       }
 
-      setupPhotoOverlay('openPhotoA', 'photoOverlayA', 'photoBgA', 'photoImgA');
-      setupPhotoOverlay('openPhotoB', 'photoOverlayB', 'photoBgB', 'photoImgB');
-      setupPhotoOverlay('openPhotoC', 'photoOverlayC', 'photoBgC', 'photoImgC');
+      // Attiva i tre overlay foto
+      setupOverlay('photoBtnA','ovA','ovAbg','ovAx');
+      setupOverlay('photoBtnB','ovB','ovBbg','ovBx');
+      setupOverlay('photoBtnC','ovC','ovCbg','ovCx');
     </script>
   </body>
 </html>
+
 
 
 
