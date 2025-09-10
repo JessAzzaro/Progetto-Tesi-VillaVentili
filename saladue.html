@@ -73,6 +73,9 @@
         <img id="vecchia7" src="foto/vecchia7.jpg">
         <img id="vecchia8" src="foto/vecchia8.jpg">
 
+        <!-- Immagine singola: volta sala 2 -->
+        <img id="voltaSala2" src="foto/voltasala2.jpeg">
+
         <!-- AUDIO sala 2
      Musica: Gaetano Braga, La Serenata (Leggenda valacca)
      Reinterpretazione: Elena Mariani (soprano), Massimo Nesi (violino), Gianni Franceschi (pianoforte) -->
@@ -122,6 +125,11 @@
                position="-3 1 6" rotation="0 -20 0" scale="0.6 0.6 0.6"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
+      <!-- Icona: apri immagine singola (Volta Sala 2) -->
+      <a-image id="openVolta" class="clickable" src="#searchIcon"
+               position="0 8 3" rotation="90 -150 10" scale="0.6 0.6 0.6"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
       <!-- Copertura treppiede -->
       <a-entity position="10 -130 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5"
@@ -143,7 +151,7 @@
                       gltf-model="#statuaGalvani"
                       position="0 0 0.2"
                       rotation="0 30 0"
-                      scale="0.35 0.35 0.35"></a-entity>
+                      scale="2 2 2"></a-entity>
 
             <a-text id="cap3D"
                     value="Galvani, bronzo, cm.63x23x23, 1885-1886 ca.\n(fusione postuma in bronzo, 2009)"
@@ -163,10 +171,10 @@
             <a-image id="imgGal1" src="#soldato1" position="0 0.06 0.02"></a-image>
 
             <a-image id="prevGal1" class="clickable" src="#arrowL"
-                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="-0.7 -0.28 0.15" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
             <a-image id="nextGal1" class="clickable" src="#arrowR"
-                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="0.7 -0.28 0.15" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
 
             <a-text id="countGal1" value="1/15"
@@ -177,7 +185,7 @@
                     position="0 -0.70 0.02"></a-text>
 
             <a-image id="closeGal1" class="clickable" src="#closeIcon"
-                     position="0 -0.85 0.20" scale="0.24 0.24 0.24"
+                     position="0 -0.85 0.25" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -189,10 +197,10 @@
             <a-image id="imgGal2" src="#disperato1" position="0 0.08 0.01"></a-image>
 
             <a-image id="prevGal2" class="clickable" src="#arrowL"
-                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="-0.7 -0.28 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
             <a-image id="nextGal2" class="clickable" src="#arrowR"
-                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="0.7 -0.28 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
 
             <a-text id="countGal2" value="1/5"
@@ -203,7 +211,7 @@
                     position="0 -0.70 0.02"></a-text>
 
             <a-image id="closeGal2" class="clickable" src="#closeIcon"
-                     position="0 -0.85 0.20" scale="0.24 0.24 0.24"
+                     position="0 -0.85 0.25" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -215,10 +223,10 @@
             <a-image id="imgGal3" src="#vecchia1" position="0 0.2 0.01"></a-image>
 
             <a-image id="prevGal3" class="clickable" src="#arrowL"
-                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="-0.7 -0.28 0.15" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
             <a-image id="nextGal3" class="clickable" src="#arrowR"
-                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     position="0.7 -0.28 0.15" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
 
             <a-text id="countGal3" value="1/8"
@@ -229,7 +237,24 @@
                     position="0 -0.60 0.02"></a-text>
 
             <a-image id="closeGal3" class="clickable" src="#closeIcon"
-                     position="0 -0.80 0.20" scale="0.22 0.22 0.22"
+                     position="0 -0.80 0.25" scale="0.22 0.22 0.22"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay immagine singola: Volta Sala 2 -->
+          <a-entity id="ovVolta" visible="false" position="0 0 -2">
+            <a-plane id="bgVolta" width="2.5" height="3"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgVolta" src="#voltaSala2" position="0 0.50 0.02"
+                     width="1.0" height="1.6"></a-image>
+
+            <a-text value="Adorazione.Prospero Piatti, Villa Ventili, ex Cappella (1899?).\n(Trittico dell'Adorazione, Chiesa dell'Addolorata, Mosciano Sant'Angelo, 1894) "
+                    align="center" color="#fff" width="1.5"
+                    position="0 -0.55 0.10"></a-text>
+
+            <a-image id="closeVolta" class="clickable" src="#closeIcon"
+                     position="0 -0.90 0.30" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -402,6 +427,28 @@
       setupPhotoOverlayWithCarousel('openGal1','ovGal1','bgGal1','closeGal1', 1, 'prevGal1','nextGal1');
       setupPhotoOverlayWithCarousel('openGal2','ovGal2','bgGal2','closeGal2', 2, 'prevGal2','nextGal2');
       setupPhotoOverlayWithCarousel('openGal3','ovGal3','bgGal3','closeGal3', 3, 'prevGal3','nextGal3');
+
+      /* ===== Overlay immagine singola: Volta Sala 2 ===== */
+      const openVolta = document.getElementById('openVolta');
+      const ovVolta   = document.getElementById('ovVolta');
+      const bgVolta   = document.getElementById('bgVolta');
+      const closeVolta= document.getElementById('closeVolta');
+
+      openVolta.addEventListener('click', () => {
+        ovVolta.setAttribute('visible', true);
+        cam.components['look-controls']?.pause();
+        bgVolta.setAttribute('animation__fadein',
+          'property: material.opacity; from: 0; to: 0.95; dur: 250; easing: easeOutQuad');
+      });
+
+      closeVolta.addEventListener('click', () => {
+        bgVolta.setAttribute('animation__fadeout',
+          'property: material.opacity; from: 0.95; to: 0; dur: 220; easing: easeInQuad');
+        setTimeout(() => {
+          ovVolta.setAttribute('visible', false);
+          cam.components['look-controls']?.play();
+        }, 220);
+      });
     </script>
   </body>
 </html>
