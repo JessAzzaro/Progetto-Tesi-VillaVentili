@@ -72,10 +72,19 @@
         <img id="vecchia6" src="foto/vecchia6.jpg">
         <img id="vecchia7" src="foto/vecchia7.jpg">
         <img id="vecchia8" src="foto/vecchia8.jpg">
+
+        <!-- AUDIO sala 2
+     Musica: Gaetano Braga, La Serenata (Leggenda valacca)
+     Reinterpretazione: Elena Mariani (soprano), Massimo Nesi (violino), Gianni Franceschi (pianoforte) -->
+        <audio id="bgSala2" src="audio/sottofondosala2.mp3" preload="auto"></audio>
       </a-assets>
 
       <!-- Panorama -->
       <a-sky src="#saladue360" rotation="0 0 0"></a-sky>
+
+      <!-- Musica di sottofondo (autoplay + loop) -->
+      <a-entity id="backgroundSound"
+                sound="src: #bgSala2; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
       <!-- Link torna indietro -->
       <a-link href="museopagliaccetti.html"
@@ -126,23 +135,23 @@
         <a-entity id="cam" camera look-controls position="0 1.6 0">
 
           <!-- Overlay 3D: Galvani -->
-          <a-entity id="ov3D" visible="false" position="0 0 -1">
+          <a-entity id="ov3D" visible="false" position="0 0 -2">
             <a-plane id="bg3D" width="2.5" height="2"
                      material="color:#000; opacity:0.0; transparent:true"></a-plane>
 
             <a-entity id="galvaniModel"
                       gltf-model="#statuaGalvani"
-                      position="0 -0.18 0.2"
+                      position="0 0 0.2"
                       rotation="0 30 0"
                       scale="0.35 0.35 0.35"></a-entity>
 
             <a-text id="cap3D"
-                    value="Galvani (modello con base) – glTF"
+                    value="Galvani, bronzo, cm.63x23x23, 1885-1886 ca.\n(fusione postuma in bronzo, 2009)"
                     align="center" color="#ffffff" width="1.6"
                     position="0 -0.32 0.22"></a-text>
 
             <a-image id="close3D" class="clickable" src="#closeIcon"
-                     position="0 -0.48 0.22" scale="0.22 0.22 0.22"
+                     position="0 -0.60 0.22" scale="0.22 0.22 0.22"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -163,7 +172,7 @@
             <a-text id="countGal1" value="1/15"
                     align="center" color="#bbb" width="01"
                     position="0 0.80 0.02"></a-text>
-            <a-text value="Il soldato Cappellini a Lissa, gesso, cm.85x40x38, 1866 ca.”\n(fusione postuma in bronzo, 1989)"
+            <a-text value="Il soldato Cappellini a Lissa, gesso, cm.85x40x38, 1866 ca.\n(fusione postuma in bronzo, 1989)"
                     align="center" color="#fff" width="1.5"
                     position="0 -0.70 0.02"></a-text>
 
@@ -228,8 +237,27 @@
       </a-entity>
     </a-scene>
 
+    <!-- Toggle audio (come cappella) -->
+    <div id="audioToggle" style="
+      position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+      padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+      font-size:18px; line-height:1;">🔊</div>
+
     <script>
       const cam = document.getElementById('cam');
+
+      /* ===== Audio BG toggle (stile cappella) ===== */
+      const audioToggle = document.getElementById('audioToggle');
+      const backgroundSound = document.getElementById('backgroundSound');
+      const bgSound = () => backgroundSound?.components?.sound;
+      let isSoundOn = true;
+
+      audioToggle.addEventListener('click', () => {
+        if (!bgSound()) return;
+        isSoundOn = !isSoundOn;
+        if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+        else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+      });
 
       /* ===== Overlay 3D: apertura/chiusura, drag-rotate, zoom ===== */
       const open3D = document.getElementById('open3D');
@@ -377,4 +405,5 @@
     </script>
   </body>
 </html>
+
 
