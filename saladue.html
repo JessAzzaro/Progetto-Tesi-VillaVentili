@@ -2,64 +2,379 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Visita-Sala 2</title>
-    <meta name="description" content="Museo Pagliaccetti- Villa Ventilj Mosciano Sant'Angelo">
+    <title>Visita – Sala 2</title>
+    <meta name="description" content="Museo Pagliaccetti – Villa Ventilj Mosciano Sant'Angelo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+    <style>
+      /* nessun controllo HTML extra qui, tutto in-scene */
+    </style>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+
+      <!-- ASSET -->
       <a-assets>
-      <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
-      <img id="saladue360" crossOrigin="anonymous" src="foto/saladue360.jpeg">
-      <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        
+        <!-- Panorama e preview -->
+        <img id="museopreview" crossorigin="anonymous" src="foto/museopreview.jpg">
+        <img id="saladue360"  crossorigin="anonymous" src="foto/saladue360.jpeg">
+        <img id="logo"        crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+
+        <!-- Icone -->
+        <img id="icon3d"    src="icons/icona3d.png">
+        <img id="searchIcon" src="icons/search.png">
+        <img id="closeIcon"  src="icons/close.png">
+        <img id="arrowL"     src="icons/arrowleft.png">
+        <img id="arrowR"     src="icons/arrowright.png">
+
+        <!-- Modello 3D (galvani con base inclusa in GLB) -->
+        <a-asset-item id="statuaGalvani" src="model/galvani3d.glb"></a-asset-item>
+
+        <!-- Galleria 1: soldato1..15 -->
+        <img id="soldato1"  src="foto/soldato1.jpg">
+        <img id="soldato2"  src="foto/soldato2.jpg">
+        <img id="soldato3"  src="foto/soldato3.jpg">
+        <img id="soldato4"  src="foto/soldato4.jpg">
+        <img id="soldato5"  src="foto/soldato5.jpg">
+        <img id="soldato6"  src="foto/soldato6.jpg">
+        <img id="soldato7"  src="foto/soldato7.jpg">
+        <img id="soldato8"  src="foto/soldato8.jpg">
+        <img id="soldato9"  src="foto/soldato9.jpg">
+        <img id="soldato10" src="foto/soldato10.jpg">
+        <img id="soldato11" src="foto/soldato11.jpg">
+        <img id="soldato12" src="foto/soldato12.jpg">
+        <img id="soldato13" src="foto/soldato13.jpg">
+        <img id="soldato14" src="foto/soldato14.jpg">
+        <img id="soldato15" src="foto/soldato15.jpg">
+
+        <!-- Galleria 2: disperato1..5 -->
+        <img id="disperato1" src="foto/disperato1.jpg">
+        <img id="disperato2" src="foto/disperato2.jpg">
+        <img id="disperato3" src="foto/disperato3.jpg">
+        <img id="disperato4" src="foto/disperato4.jpg">
+        <img id="disperato5" src="foto/disperato5.jpg">
+
+        <!-- Galleria 3: vecchia1..8 -->
+        <img id="vecchia1" src="foto/vecchia1.jpg">
+        <img id="vecchia2" src="foto/vecchia2.jpg">
+        <img id="vecchia3" src="foto/vecchia3.jpg">
+        <img id="vecchia4" src="foto/vecchia4.jpg">
+        <img id="vecchia5" src="foto/vecchia5.jpg">
+        <img id="vecchia6" src="foto/vecchia6.jpg">
+        <img id="vecchia7" src="foto/vecchia7.jpg">
+        <img id="vecchia8" src="foto/vecchia8.jpg">
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#saladue360"
-             rotation="0 -0 0"></a-sky>
-      
-      <!-- Link ad altra stanza torna indietro -->
+
+      <!-- Panorama -->
+      <a-sky src="#saladue360" rotation="0 0 0"></a-sky>
+
+      <!-- Link torna indietro -->
       <a-link href="museopagliaccetti.html"
               title="Torna indietro"
               image="#museopreview"
               position="4 0 -4"
               rotation="0 -60 0"></a-link>
-      
-       <!-- Link ad altra stanza Sala 3-->
+
+      <!-- Link avanti Sala 3 -->
       <a-link href="salatre.html"
-              title="Visita-Sala 3"
-              image="#salatrepreview"
+              title="Visita – Sala 3"
+              image="#museopreview"
               position="-6 0 -4"
               rotation="0 50 0"></a-link>
-      
-      
-      <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -130 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
-      </a-entity>      
 
-       
-    
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+      <!-- Icona: apri overlay 3D -->
+      <a-image id="open3D"
+               class="clickable"
+               src="#icon3d"
+               position="5 0 3"
+               rotation="0 -90 0"
+               scale="0.7 0.7 0.7"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- Icone: apri 3 gallerie foto  -->
+      <a-image id="openGal1" class="clickable" src="#searchIcon"
+               position="-5 0 2" rotation="0 40 0" scale="0.6 0.6 0.6"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openGal2" class="clickable" src="#searchIcon"
+               position="-3 -1 -4" rotation="0 0 0" scale="0.6 0.6 0.6"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openGal3" class="clickable" src="#searchIcon"
+               position="-3 1 6" rotation="0 -20 0" scale="0.6 0.6 0.6"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- Copertura treppiede -->
+      <a-entity position="10 -130 12" rotation="0 0 0">
+        <a-cylinder radius="50" height="0.5"
+                    material="color: #ffffff; shader: flat; emissive: #ffffff"></a-cylinder>
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 205 0" scale="-1 1 1"></a-image>
+      </a-entity>
+
+      <!-- CAMERA + OVERLAY -->
+      <a-entity id="rig">
+        <a-entity id="cam" camera look-controls position="0 1.6 0">
+
+          <!-- Overlay 3D: Galvani -->
+          <a-entity id="ov3D" visible="false" position="0 0 -1">
+            <a-plane id="bg3D" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-entity id="galvaniModel"
+                      gltf-model="#statuaGalvani"
+                      position="0 -0.18 0.2"
+                      rotation="0 30 0"
+                      scale="0.35 0.35 0.35"></a-entity>
+
+            <a-text id="cap3D"
+                    value="Galvani (modello con base) – glTF"
+                    align="center" color="#ffffff" width="1.6"
+                    position="0 -0.32 0.22"></a-text>
+
+            <a-image id="close3D" class="clickable" src="#closeIcon"
+                     position="0 -0.48 0.22" scale="0.22 0.22 0.22"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay Galleria 1 (soldato) -->
+          <a-entity id="ovGal1" visible="false" position="0 0 -2">
+            <a-plane id="bgGal1" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgGal1" src="#soldato1" position="0 0.06 0.02"></a-image>
+
+            <a-image id="prevGal1" class="clickable" src="#arrowL"
+                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+            <a-image id="nextGal1" class="clickable" src="#arrowR"
+                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+
+            <a-text id="countGal1" value="1/15"
+                    align="center" color="#bbb" width="01"
+                    position="0 0.80 0.02"></a-text>
+            <a-text value="Il soldato Cappellini a Lissa, gesso, cm.85x40x38, 1866 ca.”\n(fusione postuma in bronzo, 1989)"
+                    align="center" color="#fff" width="1.5"
+                    position="0 -0.70 0.02"></a-text>
+
+            <a-image id="closeGal1" class="clickable" src="#closeIcon"
+                     position="0 -0.85 0.20" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay Galleria 2 (disperato) -->
+          <a-entity id="ovGal2" visible="false" position="0 0 -2">
+            <a-plane id="bgGal2" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgGal2" src="#disperato1" position="0 0.08 0.01"></a-image>
+
+            <a-image id="prevGal2" class="clickable" src="#arrowL"
+                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+            <a-image id="nextGal2" class="clickable" src="#arrowR"
+                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+
+            <a-text id="countGal2" value="1/5"
+                    align="center" color="#bbb" width="01"
+                    position="0 0.80 0.02"></a-text>
+            <a-text value="Figura di giovane demente o lo scemo con le mani incrociate, fusione postuma in bronzo, 1989”\n(gesso, cm.100x80x60, 1885 ca.)"
+                    align="center" color="#fff" width="1.6"
+                    position="0 -0.70 0.02"></a-text>
+
+            <a-image id="closeGal2" class="clickable" src="#closeIcon"
+                     position="0 -0.85 0.20" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay Galleria 3 (vecchia) -->
+          <a-entity id="ovGal3" visible="false" position="0 0 -2">
+            <a-plane id="bgGal3" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgGal3" src="#vecchia1" position="0 0.2 0.01"></a-image>
+
+            <a-image id="prevGal3" class="clickable" src="#arrowL"
+                     position="-0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+            <a-image id="nextGal3" class="clickable" src="#arrowR"
+                     position="0.7 -0.28 0.02" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+
+            <a-text id="countGal3" value="1/8"
+                    align="center" color="#bbb" width="01"
+                    position="0 0.90 0.02"></a-text>
+            <a-text value="Ritratto di vecchia signora, gesso, cm. 72x45x28, 1880-1887 ca.\n(fusione postuma in bronzo, 2009)"
+                    align="center" color="#fff" width="1.6"
+                    position="0 -0.60 0.02"></a-text>
+
+            <a-image id="closeGal3" class="clickable" src="#closeIcon"
+                     position="0 -0.80 0.20" scale="0.22 0.22 0.22"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+        </a-entity>
+      </a-entity>
     </a-scene>
 
+    <script>
+      const cam = document.getElementById('cam');
+
+      /* ===== Overlay 3D: apertura/chiusura, drag-rotate, zoom ===== */
+      const open3D = document.getElementById('open3D');
+      const ov3D   = document.getElementById('ov3D');
+      const bg3D   = document.getElementById('bg3D');
+      const close3D= document.getElementById('close3D');
+      const model3D= document.getElementById('galvaniModel');
+
+      open3D.addEventListener('click', () => {
+        ov3D.setAttribute('visible', true);
+        cam.components['look-controls']?.pause();
+        bg3D.setAttribute('animation__fadein',
+          'property: material.opacity; from: 0; to: 0.95; dur: 250; easing: easeOutQuad');
+      });
+
+      close3D.addEventListener('click', () => {
+        bg3D.setAttribute('animation__fadeout',
+          'property: material.opacity; from: 0.95; to: 0; dur: 220; easing: easeInQuad');
+        setTimeout(() => {
+          ov3D.setAttribute('visible', false);
+          cam.components['look-controls']?.play();
+        }, 220);
+      });
+
+      // zoom (wheel)
+      window.addEventListener('wheel', (e) => {
+        if (!ov3D.getAttribute('visible')) return;
+        let s = model3D.getAttribute('scale').x;
+        s = (e.deltaY < 0) ? s * 1.1 : s * 0.9;
+        s = Math.min(Math.max(s, 0.2), 1.2);
+        model3D.setAttribute('scale', `${s} ${s} ${s}`);
+      }, {passive:true});
+
+      // pinch (touch)
+      let pinchStart = 0;
+      window.addEventListener('touchstart', (e) => {
+        if (!ov3D.getAttribute('visible')) return;
+        if (e.touches.length === 2) {
+          pinchStart = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      }, {passive:true});
+      window.addEventListener('touchmove', (e) => {
+        if (!ov3D.getAttribute('visible')) return;
+        if (e.touches.length === 2 && pinchStart > 0) {
+          const nd = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          let s = model3D.getAttribute('scale').x * (nd / pinchStart);
+          s = Math.min(Math.max(s, 0.2), 1.2);
+          model3D.setAttribute('scale', `${s} ${s} ${s}`);
+          pinchStart = nd;
+        }
+      }, {passive:true});
+
+      // drag rotate (libero)
+      let dragging=false, lastX=0, lastY=0;
+      function startDrag(x,y){ if(ov3D.getAttribute('visible')){ dragging=true; lastX=x; lastY=y; } }
+      function doDrag(x,y){
+        if(!dragging || !ov3D.getAttribute('visible')) return;
+        const dx=x-lastX, dy=y-lastY; lastX=x; lastY=y;
+        const r=model3D.getAttribute('rotation');
+        model3D.setAttribute('rotation', `${r.x - dy*0.3} ${r.y + dx*0.4} ${r.z}`);
+      }
+      function endDrag(){ dragging=false; }
+
+      window.addEventListener('mousedown', e=>startDrag(e.clientX,e.clientY));
+      window.addEventListener('mousemove', e=>doDrag(e.clientX,e.clientY));
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchstart', e=>{ if(e.touches.length===1){ const t=e.touches[0]; startDrag(t.clientX,t.clientY);} }, {passive:true});
+      window.addEventListener('touchmove',  e=>{ if(e.touches.length===1){ const t=e.touches[0]; doDrag(t.clientX,t.clientY);} }, {passive:true});
+      window.addEventListener('touchend', endDrag);
+      window.addEventListener('touchcancel', endDrag);
+
+      /* ===== Caroselli foto (3 gallerie) ===== */
+      const galleries = {
+        1: { ids: ['#soldato1','#soldato2','#soldato3','#soldato4','#soldato5','#soldato6','#soldato7','#soldato8','#soldato9','#soldato10','#soldato11','#soldato12','#soldato13','#soldato14','#soldato15'], idx:0, imgEnt:'imgGal1', countEnt:'countGal1' },
+        2: { ids: ['#disperato1','#disperato2','#disperato3','#disperato4','#disperato5'], idx:0, imgEnt:'imgGal2', countEnt:'countGal2' },
+        3: { ids: ['#vecchia1','#vecchia2','#vecchia3','#vecchia4','#vecchia5','#vecchia6','#vecchia7','#vecchia8'], idx:0, imgEnt:'imgGal3', countEnt:'countGal3' }
+      };
+
+      function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.3){
+        const asset=document.querySelector(assetSelector);
+        const img=document.getElementById(imgEntityId);
+        if(!asset) return;
+        const ready=()=>{
+          const w=asset.naturalWidth, h=asset.naturalHeight; if(!w||!h) return;
+          const ar=w/h, boxAr=maxW/maxH;
+          let W,H; if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
+          img.setAttribute('width',W.toFixed(3));
+          img.setAttribute('height',H.toFixed(3));
+        };
+        if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
+      }
+
+      function updateGallery(which){
+        const g=galleries[which];
+        const imgEnt=document.getElementById(g.imgEnt);
+        const countEnt=document.getElementById(g.countEnt);
+        const srcId=g.ids[g.idx];
+        imgEnt.setAttribute('src', srcId);
+        countEnt.setAttribute('value', `${g.idx+1}/${g.ids.length}`);
+        fitToBox(srcId, g.imgEnt);
+      }
+
+      function setupPhotoOverlayWithCarousel(openId, overlayId, bgId, closeId, which, prevId, nextId){
+        const openBtn=document.getElementById(openId);
+        const ov=document.getElementById(overlayId);
+        const bg=document.getElementById(bgId);
+        const close=document.getElementById(closeId);
+        const prev=document.getElementById(prevId);
+        const next=document.getElementById(nextId);
+
+        openBtn.addEventListener('click', ()=>{
+          ov.setAttribute('visible', true);
+          cam.components['look-controls']?.pause();
+          bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+          updateGallery(which);
+        });
+
+        close.addEventListener('click', ()=>{
+          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+          setTimeout(()=>{ ov.setAttribute('visible',false); cam.components['look-controls']?.play(); },220);
+        });
+
+        prev.addEventListener('click', ()=>{
+          const g=galleries[which];
+          g.idx=(g.idx - 1 + g.ids.length) % g.ids.length;
+          updateGallery(which);
+        });
+
+        next.addEventListener('click', ()=>{
+          const g=galleries[which];
+          g.idx=(g.idx + 1) % g.ids.length;
+          updateGallery(which);
+        });
+      }
+
+      setupPhotoOverlayWithCarousel('openGal1','ovGal1','bgGal1','closeGal1', 1, 'prevGal1','nextGal1');
+      setupPhotoOverlayWithCarousel('openGal2','ovGal2','bgGal2','closeGal2', 2, 'prevGal2','nextGal2');
+      setupPhotoOverlayWithCarousel('openGal3','ovGal3','bgGal3','closeGal3', 3, 'prevGal3','nextGal3');
+    </script>
   </body>
 </html>
+
