@@ -72,10 +72,17 @@
         <img id="vecchia6" src="foto/vecchia6.jpg">
         <img id="vecchia7" src="foto/vecchia7.jpg">
         <img id="vecchia8" src="foto/vecchia8.jpg">
+
+        <!-- AUDIO sala 2 (come cappella) -->
+        <audio id="bgSala2" src="audio/sottofondosala2.mp3" preload="auto"></audio>
       </a-assets>
 
       <!-- Panorama -->
       <a-sky src="#saladue360" rotation="0 0 0"></a-sky>
+
+      <!-- Musica di sottofondo (autoplay + loop) -->
+      <a-entity id="backgroundSound"
+                sound="src: #bgSala2; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
       <!-- Link torna indietro -->
       <a-link href="museopagliaccetti.html"
@@ -228,8 +235,27 @@
       </a-entity>
     </a-scene>
 
+    <!-- Toggle audio (come cappella) -->
+    <div id="audioToggle" style="
+      position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+      padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+      font-size:18px; line-height:1;">🔊</div>
+
     <script>
       const cam = document.getElementById('cam');
+
+      /* ===== Audio BG toggle (stile cappella) ===== */
+      const audioToggle = document.getElementById('audioToggle');
+      const backgroundSound = document.getElementById('backgroundSound');
+      const bgSound = () => backgroundSound?.components?.sound;
+      let isSoundOn = true;
+
+      audioToggle.addEventListener('click', () => {
+        if (!bgSound()) return;
+        isSoundOn = !isSoundOn;
+        if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+        else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+      });
 
       /* ===== Overlay 3D: apertura/chiusura, drag-rotate, zoom ===== */
       const open3D = document.getElementById('open3D');
@@ -377,4 +403,5 @@
     </script>
   </body>
 </html>
+
 
