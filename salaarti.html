@@ -4,72 +4,310 @@
     <meta charset="utf-8">
     <title>Sala delle Arti</title>
     <meta name="description" content="Pasquale Ventilj - Mosciano Sant'Angelo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- (opzionali, se già usati altrove) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+
+    <style>
+      /* Toggle audio */
+      #audioToggle{
+        position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+        padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+        font-size:18px; line-height:1; z-index: 10;
+      }
+    </style>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+
+      <!-- ASSET -->
       <a-assets>
-        <img id="salaartipreview" crossOrigin="anonymous" src="foto/artipreview.jpg">
-        <img id="salaarti360" crossOrigin="anonymous" src="foto/sala_arti.jpeg">
-        <img id="direzionepreview" crossOrigin="anonymous" src="foto/direzionepreview.jpg">
-        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        <img id="vetratapreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
-        <img id="salaautori" crossOrigin="anonymous" src="foto/salaautori.jpg">
-        
+        <!-- Panorama e preview per link -->
+        <img id="salaarti360"     crossorigin="anonymous" src="foto/sala_arti.jpeg">
+        <img id="salaletteraprev" crossorigin="anonymous" src="foto/salaautori.jpg">
+        <img id="atrioprev"       crossorigin="anonymous" src="foto/atriopreviewalto.jpg">
+        <img id="logo"            crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+
+        <!-- Icone -->
+        <img id="searchIcon" src="icons/search.png">
+        <img id="closeIcon"  src="icons/close.png">
+        <img id="arrowL"     src="icons/arrowleft.png">
+        <img id="arrowR"     src="icons/arrowright.png">
+
+        <!-- Carosello 1: Volta (1..9) -->
+        <img id="volta"  src="foto/volta.jpg">
+        <img id="volta2" src="foto/volta2.jpg">
+        <img id="volta3" src="foto/volta3.jpg">
+        <img id="volta4" src="foto/volta4.jpg">
+        <img id="volta5" src="foto/volta5.jpg">
+        <img id="volta6" src="foto/volta6.jpg">
+        <img id="volta7" src="foto/volta7.jpg">
+        <img id="volta8" src="foto/volta8.jpg">
+        <img id="volta9" src="foto/volta9.jpg">
+
+        <!-- Carosello 2: Documenti/Fotografie con didascalie specifiche -->
+        <img id="donnacopricapo"   src="foto/donnacopricapo.jpg">
+        <img id="ottoRodi"         src="foto/8rodi.jpeg">
+        <img id="badogliotonino"   src="foto/badogliotonino.jpg">
+        <img id="celommi"          src="foto/celommi.jpeg">
+
+        <!-- Musica (stessa dell'atrio) -->
+        <audio id="bgSalaArti" src="audio/sottofondo.mp3" preload="auto"></audio>
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#salaarti360"
-             rotation="0 0 0"></a-sky>
-      
-      <!-- Link ad altra stanza torna indietro -->
-      <a-link href="index.html"
-              title="Torna all'ingresso"
-              image="#vetratapreview"
-              position="-4 0 9"
-              rotation="0 -50 0"></a-link>
-      
-        <!-- Link ad altra stanza Ufficio di P. Ventili -->
-      <a-link href="direzione.html"
-              title="Ufficio di P. Ventilj"
-              image="#direzionepreview"
-              position="-8 0 5"
-              rotation="0 -80 0"></a-link>
-      
-        <!-- Link ad altra stanza Sala da pranzo -->
+
+      <!-- Panorama -->
+      <a-sky src="#salaarti360" rotation="0 0 0"></a-sky>
+
+      <!-- Musica di sottofondo -->
+      <a-entity id="backgroundSound"
+                sound="src: #bgSalaArti; autoplay: true; loop: true; volume: 0.8"></a-entity>
+
+      <!-- Link di navigazione -->
       <a-link href="salaletteratura.html"
-              title="Sala degli autori"
-              image="#salaautori"
-              position="-6 0.25 -5"
-              rotation="0 45 0"></a-link>
+              title="Torna alla Sala Letteratura"
+              image="#salaletteraprev"
+              position="-6 0 -4"
+              rotation="0 80 0"></a-link>
 
-           
- <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -180 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 -0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
-      </a-entity>     
+      <a-link href="atrio.html"
+              title="Atrio principale"
+              image="#atrioprev"
+              position="6 0 8"
+              rotation="0 -65 0"></a-link>
 
-     
-    
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+      <!-- Copertura treppiede + logo -->
+      <a-entity position="10 -300 12" rotation="0 0 0">
+        <a-cylinder radius="50" height="0.5"
+                    material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 115 0" scale="-1 1 1"></a-image>
+      </a-entity>
+
+      <!-- ICONE: 2 caroselli -->
+      <a-image id="openVolta" class="clickable" src="#searchIcon"
+               position="-3 4 8" rotation="0 -5 0" scale="0.8 0.8 0.8"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openDoc" class="clickable" src="#searchIcon"
+               position="4 3 7" rotation="0 10 0" scale="0.8 0.8 0.8"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- CAMERA + OVERLAY -->
+      <a-entity id="rig">
+        <a-entity id="cam" camera look-controls position="0 1.6 0">
+
+          <!-- Overlay CAROSELLO: VOLTA -->
+          <a-entity id="ovVolta" visible="false" position="0 0 -2">
+            <a-plane id="bgVolta" width="2.8" height="2.25"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgVolta" src="#volta" position="0 0.15 0.02"></a-image>
+
+            <a-image id="prevVolta" class="clickable" src="#arrowL"
+                     position="-0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+            <a-image id="nextVolta" class="clickable" src="#arrowR"
+                     position="0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+            <a-text id="countVolta" value="1/9"
+                    align="center" color="#bbb" width="1.0"
+                    position="0 0.90 0.02"></a-text>
+
+            <a-text id="capVolta"
+                    value="Volta della sala – dettagli"
+                    align="center" color="#fff" width="1.9"
+                    position="0 -0.62 0.02"></a-text>
+
+            <a-image id="closeVolta" class="clickable" src="#closeIcon"
+                     position="0 -0.86 0.30" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay CAROSELLO: DOCUMENTI / FOTO -->
+          <a-entity id="ovDoc" visible="false" position="0 0 -2">
+            <a-plane id="bgDoc" width="2.8" height="2.25"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgDoc" src="#donnacopricapo" position="0 0.15 0.02"></a-image>
+
+            <a-image id="prevDoc" class="clickable" src="#arrowL"
+                     position="-0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+            <a-image id="nextDoc" class="clickable" src="#arrowR"
+                     position="0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+            <a-text id="countDoc" value="1/4"
+                    align="center" color="#bbb" width="1.0"
+                    position="0 0.90 0.02"></a-text>
+
+            <a-text id="capDoc"
+                    value="Donna con copricapo, V. Vecchini (?)"
+                    align="center" color="#fff" width="1.9"
+                    position="0 -0.62 0.02"></a-text>
+
+            <a-image id="closeDoc" class="clickable" src="#closeIcon"
+                     position="0 -0.86 0.30" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+        </a-entity>
+      </a-entity>
     </a-scene>
 
+    <!-- Toggle audio -->
+    <div id="audioToggle">🔊</div>
+
+    <script>
+      const cam = document.getElementById('cam');
+
+      /* ===== Toggle audio BG ===== */
+      (function(){
+        const audioToggle = document.getElementById('audioToggle');
+        const backgroundSound = document.getElementById('backgroundSound');
+        const bgSound = () => backgroundSound?.components?.sound;
+        let isSoundOn = true;
+        audioToggle.addEventListener('click', () => {
+          if (!bgSound()) return;
+          isSoundOn = !isSoundOn;
+          if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+          else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+        });
+      })();
+
+      /* ===== Helper: adatta immagine nel box ===== */
+      function fitToBox(assetSelector, imgEntityId, maxW=2.1, maxH=1.45){
+        const asset=document.querySelector(assetSelector);
+        const img=document.getElementById(imgEntityId);
+        if(!asset) return;
+        const ready=()=>{
+          const w=asset.naturalWidth, h=asset.naturalHeight; if(!w||!h) return;
+          const ar=w/h, boxAr=maxW/maxH;
+          let W,H; if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
+          img.setAttribute('width',W.toFixed(3));
+          img.setAttribute('height',H.toFixed(3));
+        };
+        if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
+      }
+
+      /* ===== Strutture caroselli ===== */
+      const galleries = {
+        volta: {
+          ids: ['#volta','#volta2','#volta3','#volta4','#volta5','#volta6','#volta7','#volta8','#volta9'],
+          idx: 0,
+          imgEnt: 'imgVolta',
+          countEnt: 'countVolta',
+          captionEnt: 'capVolta',
+          captions: [
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli',
+            'Volta della sala – dettagli'
+          ]
+        },
+        doc: {
+          ids: ['#donnacopricapo','#ottoRodi','#badogliotonino','#celommi'],
+          idx: 0,
+          imgEnt: 'imgDoc',
+          countEnt: 'countDoc',
+          captionEnt: 'capDoc',
+          captions: [
+            'Donna con copricapo, V. Vecchini (?)',
+            'Pasquale Ventilj in presenza con P.Badoglio. Foto Rodi',
+            'Pasquale Ventilj in presenza con P.Badoglio. Foto Rodi – T. Di Matteo',
+            "L'Operaio politico, P. Celommi, olio su tela, cm.81x65. Pinacoteca Civica Teramo"
+          ]
+        }
+      };
+
+      function updateGallery(key){
+        const g = galleries[key];
+        const img = document.getElementById(g.imgEnt);
+        const count = document.getElementById(g.countEnt);
+        const cap = document.getElementById(g.captionEnt);
+        const srcId = g.ids[g.idx];
+        img.setAttribute('src', srcId);
+        count.setAttribute('value', (g.idx+1) + '/' + g.ids.length);
+        if (cap && g.captions && g.captions[g.idx]) {
+          cap.setAttribute('value', g.captions[g.idx]);
+        }
+        fitToBox(srcId, g.imgEnt);
+      }
+
+      function setupPhotoOverlayWithCarousel(opts){
+        const {openId, overlayId, bgId, closeId, key, prevId, nextId} = opts;
+        const openBtn=document.getElementById(openId);
+        const ov=document.getElementById(overlayId);
+        const bg=document.getElementById(bgId);
+        const close=document.getElementById(closeId);
+        const prev=document.getElementById(prevId);
+        const next=document.getElementById(nextId);
+
+        function stop(e){ e.stopPropagation(); }
+
+        openBtn.addEventListener('click', ()=>{
+          ov.setAttribute('visible', true);
+          cam.components['look-controls']?.pause(); // blocca la 360°
+          bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+          updateGallery(key);
+        });
+
+        const doClose = ()=>{
+          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:200; easing:easeInQuad');
+          setTimeout(()=>{
+            ov.setAttribute('visible', false);
+            cam.components['look-controls']?.play(); // riattiva 360°
+          }, 200);
+        };
+
+        close.addEventListener('click', (e)=>{ stop(e); doClose(); });
+        bg.addEventListener('click', doClose);
+
+        prev.addEventListener('click', (e)=>{
+          stop(e);
+          const g=galleries[key];
+          g.idx=(g.idx - 1 + g.ids.length) % g.ids.length;
+          updateGallery(key);
+        });
+
+        next.addEventListener('click', (e)=>{
+          stop(e);
+          const g=galleries[key];
+          g.idx=(g.idx + 1) % g.ids.length;
+          updateGallery(key);
+        });
+      }
+
+      // VOLTA
+      setupPhotoOverlayWithCarousel({
+        openId:'openVolta', overlayId:'ovVolta', bgId:'bgVolta', closeId:'closeVolta',
+        key:'volta', prevId:'prevVolta', nextId:'nextVolta'
+      });
+
+      // DOCUMENTI / FOTO
+      setupPhotoOverlayWithCarousel({
+        openId:'openDoc', overlayId:'ovDoc', bgId:'bgDoc', closeId:'closeDoc',
+        key:'doc', prevId:'prevDoc', nextId:'nextDoc'
+      });
+    </script>
+
+    <!-- Toggle audio -->
+    <div id="audioToggle">🔊</div>
   </body>
 </html>
