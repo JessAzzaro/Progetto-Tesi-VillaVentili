@@ -4,72 +4,201 @@
     <meta charset="utf-8">
     <title>Sala Letteratura</title>
     <meta name="description" content="Pasquale Ventilj - Mosciano Sant'Angelo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- (opzionali, se già usati nel progetto) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+
+      <!-- ASSET -->
       <a-assets>
-        <img id="salaartipreview" crossOrigin="anonymous" src="foto/artipreview.jpg">
-        <img id="salaautori360" crossOrigin="anonymous" src="foto/salaautori360.jpeg">
-        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        <img id="vetratapreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
-        <img id="salaarti" crossOrigin="anonymous" src="foto/salaautori.jpg">
+        <!-- Panorama e preview -->
+        <img id="salaautori360" crossorigin="anonymous" src="foto/salaautori360.jpeg">
+        <img id="salaartipreview" crossorigin="anonymous" src="foto/artipreview.jpg">
+        <img id="vetratapreview" crossorigin="anonymous" src="foto/vetratapreview.jpg">
         <img id="aristodemopreview" crossorigin="anonymous" src="foto/atriopreviewalto.jpg">
-        
+        <img id="salaarti" crossorigin="anonymous" src="foto/salaautori.jpg">
+        <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+
+        <!-- Icone -->
+        <img id="searchIcon" src="icons/search.png">
+        <img id="closeIcon"  src="icons/close.png">
+        <img id="arrowL"     src="icons/arrowleft.png">
+        <img id="arrowR"     src="icons/arrowright.png">
+
+        <!-- Immagini carosello autori -->
+        <img id="cantu"     src="foto/cantu.jpg">
+        <img id="manzoni"   src="foto/manzoni.jpg">
+        <img id="leopardi"  src="foto/leopardi.jpg">
+        <img id="niccolo"   src="foto/niccolo.jpg">
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#salaautori360"
-             rotation="0 0 0"></a-sky>
-      
-      <!-- Link ad altra stanza torna all'ingresso -->
+
+      <!-- Panorama -->
+      <a-sky src="#salaautori360" rotation="0 0 0"></a-sky>
+
+      <!-- Link di navigazione -->
       <a-link href="index.html"
               title="Torna all'ingresso"
               image="#vetratapreview"
               position="11 0 3"
               rotation="0 100 0"></a-link>
-      
-        <!-- Link ad altra stanza Sala Arti -->
+
       <a-link href="salaarti.html"
               title="Sala delle Arti"
               image="#salaartipreview"
               position="10 0 0"
               rotation="0 -90 0"></a-link>
-      
-        <!-- Link ad altra stanza Atrio principale -->
+
       <a-link href="atrio.html"
-              title="Villa Ventilj-Atrio principale"
+              title="Villa Ventilj – Atrio principale"
               image="#aristodemopreview"
               position="6 0.5 10"
               rotation="0 30 0"></a-link>
 
-           
- <!-- Cilindro per coprire il treppiedi con testo -->
+      <!-- Copertura treppiede + logo -->
       <a-entity position="10 -300 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 -0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
-      </a-entity>     
+        <a-cylinder radius="50" height="0.5"
+                    material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 115 0" scale="-1 1 1"></a-image>
+      </a-entity>
 
-     
-    
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+      <!-- Icona: carosello Autori (volta) -->
+      <a-image id="openAutori" class="clickable" src="#searchIcon"
+               position="0 4 6" rotation="0 0 0" scale="0.8 0.8 0.8"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- CAMERA + OVERLAY -->
+      <a-entity id="rig">
+        <a-entity id="cam" camera look-controls position="0 1.6 0">
+
+          <!-- Overlay carosello Autori -->
+          <a-entity id="ovAutori" visible="false" position="0 0 -2">
+            <a-plane id="bgAutori" width="2.6" height="2.2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <!-- immagine adattiva -->
+            <a-image id="imgAutori" src="#cantu" position="0 0.18 0.02"></a-image>
+
+            <!-- frecce sotto l’immagine -->
+            <a-image id="prevAutori" class="clickable" src="#arrowL"
+                     position="-0.75 -0.16 0.03" scale="0.20 0.20 0.20"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+
+            <a-image id="nextAutori" class="clickable" src="#arrowR"
+                     position="0.75 -0.16 0.03" scale="0.20 0.20 0.20"
+                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+
+            <!-- contatore + didascalia (2 righe max) -->
+            <a-text id="countAutori" value="1/4"
+                    align="center" color="#bbb" width="0.9"
+                    position="0 -0.02 0.02"></a-text>
+
+            <a-text id="capAutori"
+                    value="Autori sulla volta (didascalia provvisoria)\nModifica testo in seguito."
+                    align="center" color="#fff" width="1.8"
+                    position="0 -0.48 0.02"></a-text>
+
+            <!-- X chiusura -->
+            <a-image id="closeAutori" class="clickable" src="#closeIcon"
+                     position="0 -0.82 0.40" scale="0.26 0.26 0.26"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+        </a-entity>
+      </a-entity>
     </a-scene>
 
+    <script>
+      const cam = document.getElementById('cam');
+
+      /* ===== Helper: adatta immagine al box ===== */
+      function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.35){
+        const asset=document.querySelector(assetSelector);
+        const img=document.getElementById(imgEntityId);
+        if(!asset) return;
+        const ready=()=>{
+          const w=asset.naturalWidth, h=asset.naturalHeight; if(!w||!h) return;
+          const ar=w/h, boxAr=maxW/maxH;
+          let W,H; if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
+          img.setAttribute('width',W.toFixed(3));
+          img.setAttribute('height',H.toFixed(3));
+        };
+        if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
+      }
+
+      /* ===== Carosello Autori (blocca scena durante l’overlay) ===== */
+      (function(){
+        const gallery = {
+          ids: ['#cantu','#manzoni','#leopardi','#niccolo'],
+          idx: 0,
+          imgEnt: 'imgAutori',
+          countEnt: 'countAutori'
+        };
+
+        const openBtn = document.getElementById('openAutori');
+        const ov      = document.getElementById('ovAutori');
+        const bg      = document.getElementById('bgAutori');
+        const close   = document.getElementById('closeAutori');
+        const prev    = document.getElementById('prevAutori');
+        const next    = document.getElementById('nextAutori');
+
+        function update(){
+          const srcId = gallery.ids[gallery.idx];
+          document.getElementById(gallery.imgEnt).setAttribute('src', srcId);
+          document.getElementById(gallery.countEnt).setAttribute('value', `${gallery.idx+1}/${gallery.ids.length}`);
+          fitToBox(srcId, gallery.imgEnt);
+        }
+
+        function pauseScene(){
+          // blocca il look e (se usi link-controls) i link
+          cam.components['look-controls']?.pause();
+        }
+        function resumeScene(){
+          cam.components['look-controls']?.play();
+        }
+
+        openBtn.addEventListener('click', ()=>{
+          ov.setAttribute('visible', true);
+          pauseScene();
+          bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+          update();
+        });
+
+        const doClose = ()=>{
+          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+          setTimeout(()=>{ ov.setAttribute('visible', false); resumeScene(); },220);
+        };
+
+        // Evita click-through: ferma propagazione su frecce/close
+        function stop(e){ e.stopPropagation(); }
+
+        close.addEventListener('click', (e)=>{ stop(e); doClose(); });
+        bg.addEventListener('click', doClose);
+
+        prev.addEventListener('click', (e)=>{
+          stop(e);
+          gallery.idx = (gallery.idx - 1 + gallery.ids.length) % gallery.ids.length;
+          update();
+        });
+        next.addEventListener('click', (e)=>{
+          stop(e);
+          gallery.idx = (gallery.idx + 1) % gallery.ids.length;
+          update();
+        });
+      })();
+    </script>
   </body>
 </html>
+
