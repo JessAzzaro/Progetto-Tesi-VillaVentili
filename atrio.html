@@ -2,72 +2,304 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Atrio Villa Ventilj</title>
+    <title>Atrio – Villa Ventilj</title>
     <meta name="description" content="Pasquale Ventilj - Mosciano Sant'Angelo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- (opzionali, se usati altrove) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+
+    <style>
+      /* Toggle audio */
+      #audioToggle{
+        position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+        padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+        font-size:18px; line-height:1; z-index: 10;
+      }
+
+      /* Overlay HTML per Sketchfab (fuori dalla scena A-Frame) */
+      #sketchfabOverlay{
+        position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+        background: rgba(0,0,0,.95); z-index: 20; padding: 24px;
+      }
+      #sketchfabCard{
+        width: min(1000px, 92vw);
+        max-height: 92vh;
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      #sketchfabFrameWrap{
+        position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */
+        background: #000;
+      }
+      #sketchfabFrameWrap iframe{
+        position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+      }
+      #sketchfabCaption{
+        color:#fff; font: 500 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        text-align:center; opacity:.9;
+      }
+      #closeSketchfab{
+        align-self:center;
+        display:inline-flex; align-items:center; justify-content:center;
+        width:38px; height:38px; border-radius:50%; background:#fff; cursor:pointer;
+        box-shadow:0 2px 8px rgba(0,0,0,.35); user-select:none;
+      }
+    </style>
+  </head>
   <body>
     <a-scene
-      raycaster="far: 100; objects: [link];"
+      raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
-      <!-- Componenti della pagina -->
+
+      <!-- ASSET -->
       <a-assets>
-        <img id="aristodemo" crossOrigin="anonymous" src="foto/atrio1.jpeg">
-        <img id="sky" crossOrigin="anonymous" src="foto/atrioingresso3.jpeg">
-        <img id="hallpreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
-       <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">  
-        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-        <img id="salaautori" crossOrigin="anonymous" src="foto/salaautori.jpg">
+        <!-- Panorama e preview -->
+        <img id="atrio360"       crossorigin="anonymous" src="foto/atrio1.jpeg">
+        <img id="hallpreview"    crossorigin="anonymous" src="foto/vetratapreview.jpg">
+        <img id="museopreview"   crossorigin="anonymous" src="foto/museopreview.jpg">
+        <img id="salaautori"     crossorigin="anonymous" src="foto/salaautori.jpg">
+        <img id="logo"           crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+
+        <!-- Icone -->
+        <img id="searchIcon" src="icons/search.png">
+        <img id="icon3d"     src="icons/icona3d.png">
+        <img id="closeIcon"  src="icons/close.png">
+
+        <!-- Immagini singole -->
+        <img id="carolina1" src="foto/carolina1.jpg">
+        <img id="teresa"    src="foto/teresa.jpg">
+        <img id="madonna"   src="foto/madonna.jpg">
+
+        <!-- Audio (specifico per l'atrio) -->
+        <audio id="bgAtrio" src="audio/sottofondo.mp3" preload="auto"></audio>
       </a-assets>
-      
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#aristodemo"
-             rotation="0 0 0"></a-sky>
-      
-      <!-- Link ad altra stanza - Torna all'ingresso -->
+
+      <!-- Panorama -->
+      <a-sky src="#atrio360" rotation="0 0 0"></a-sky>
+
+      <!-- Musica di sottofondo -->
+      <a-entity id="backgroundSound"
+                sound="src: #bgAtrio; autoplay: true; loop: true; volume: 0.8"></a-entity>
+
+      <!-- Link di navigazione -->
       <a-link href="index.html"
-              title="Torna all'ingresso-Villa Ventilj"
+              title="Torna all'ingresso – Villa Ventilj"
               image="#hallpreview"
               position="-6 0 -4"
-              rotation="0 90 0">
-              </a-link>
-       
-      <!-- Link ad altra stanza - Sali al piano nobile-Museo -->
+              rotation="0 90 0"></a-link>
+
       <a-link href="pianonobile.html"
-              title="Vai al Museo-Piano Nobile"
+              title="Vai al Museo – Piano Nobile"
               image="#museopreview"
               position="6 0 8"
-              rotation="0 65 0">
-              </a-link>
+              rotation="0 65 0"></a-link>
 
-        <!-- Link ad altra stanza Sala da pranzo -->
       <a-link href="salaletteratura.html"
               title="Sala degli autori"
               image="#salaautori"
               position="-6 0.30 10"
               rotation="0 -25 0"></a-link>
-     
-  <!-- Cilindro per coprire il treppiedi con testo -->
+
+      <!-- Copertura treppiede + logo -->
       <a-entity position="11 -180 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 115 0" scale="-1 1 1"></a-image>
-      </a-entity>      
-            
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+        <a-cylinder radius="50" height="0.5"
+                    material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
+        <a-image src="#logo" position="0 1 0" width="70" height="70"
+                 rotation="90 115 0" scale="-1 1 1"></a-image>
+      </a-entity>
+
+      <!-- ICONE: 3 immagini + 1 Sketchfab -->
+      <a-image id="openCarolina" class="clickable" src="#searchIcon"
+               position="-4 0 5" rotation="0 40 0" scale="0.7 0.7 0.7"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openTeresa" class="clickable" src="#searchIcon"
+               position="2 0.5 6" rotation="0 -10 0" scale="0.7 0.7 0.7"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openMadonna" class="clickable" src="#searchIcon"
+               position="5 0 3" rotation="0 20 0" scale="0.7 0.7 0.7"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <a-image id="openSketchfab" class="clickable" src="#icon3d"
+               position="-1.5 1 4" rotation="0 -25 0" scale="0.8 0.8 0.8"
+               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+
+      <!-- CAMERA + OVERLAY -->
+      <a-entity id="rig">
+        <a-entity id="cam" camera look-controls position="0 1.6 0">
+
+          <!-- Overlay: Carolina -->
+          <a-entity id="ovCarolina" visible="false" position="0 0 -2">
+            <a-plane id="bgCarolina" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgCarolina" src="#carolina1" position="0 0.10 0.02"></a-image>
+
+            <a-text value="Carolina – didascalia provvisoria"
+                    align="center" color="#fff" width="1.6"
+                    position="0 -0.62 0.02"></a-text>
+
+            <a-image id="closeCarolina" class="clickable" src="#closeIcon"
+                     position="0 -0.84 0.35" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay: Teresa -->
+          <a-entity id="ovTeresa" visible="false" position="0 0 -2">
+            <a-plane id="bgTeresa" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgTeresa" src="#teresa" position="0 0.10 0.02"></a-image>
+
+            <a-text value="Teresa – didascalia provvisoria"
+                    align="center" color="#fff" width="1.6"
+                    position="0 -0.62 0.02"></a-text>
+
+            <a-image id="closeTeresa" class="clickable" src="#closeIcon"
+                     position="0 -0.84 0.45" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+          <!-- Overlay: Madonna -->
+          <a-entity id="ovMadonna" visible="false" position="0 0 -2">
+            <a-plane id="bgMadonna" width="2.5" height="2"
+                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
+
+            <a-image id="imgMadonna" src="#madonna" position="0 0.10 0.02"></a-image>
+
+            <a-text value="Madonna – didascalia provvisoria"
+                    align="center" color="#fff" width="1.6"
+                    position="0 -0.62 0.02"></a-text>
+
+            <a-image id="closeMadonna" class="clickable" src="#closeIcon"
+                     position="0 -0.84 0.55" scale="0.24 0.24 0.24"
+                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+          </a-entity>
+
+        </a-entity>
+      </a-entity>
     </a-scene>
 
+    <!-- Toggle audio -->
+    <div id="audioToggle">🔊</div>
+
+    <!-- Overlay HTML per Sketchfab -->
+    <div id="sketchfabOverlay" role="dialog" aria-modal="true" aria-label="Modello 3D – Sketchfab">
+      <div id="sketchfabCard">
+        <div id="sketchfabFrameWrap">
+          <!-- Embed Sketchfab: Aristodemo Ventili, R. Pagliaccetti -->
+          <iframe
+            title="Aristodemo Ventili, R. Pagliaccetti."
+            allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share
+            src="https://sketchfab.com/models/0a2b35984208403aada3e5dad9c448a7/embed">
+          </iframe>
+        </div>
+        <div id="sketchfabCaption">
+          Aristodemo Ventili, R. Pagliaccetti — modello 3D integrato tramite Sketchfab.
+        </div>
+        <div id="closeSketchfab" title="Chiudi">✕</div>
+      </div>
+    </div>
+
+    <script>
+      const cam = document.getElementById('cam');
+
+      /* ===== Toggle audio BG ===== */
+      (function(){
+        const audioToggle = document.getElementById('audioToggle');
+        const backgroundSound = document.getElementById('backgroundSound');
+        const bgSound = () => backgroundSound?.components?.sound;
+        let isSoundOn = true;
+
+        audioToggle.addEventListener('click', () => {
+          if (!bgSound()) return;
+          isSoundOn = !isSoundOn;
+          if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+          else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+        });
+      })();
+
+      /* ===== Helper: fit immagine ===== */
+      function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.3){
+        const asset=document.querySelector(assetSelector);
+        const img=document.getElementById(imgEntityId);
+        if(!asset) return;
+        const ready=()=>{
+          const w=asset.naturalWidth, h=asset.naturalHeight; if(!w||!h) return;
+          const ar=w/h, boxAr=maxW/maxH;
+          let W,H; if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
+          img.setAttribute('width',W.toFixed(3));
+          img.setAttribute('height',H.toFixed(3));
+        };
+        if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
+      }
+
+      /* ===== Overlay FOTO (apri/chiudi) ===== */
+      function setupPhotoOverlay(openId, overlayId, bgId, closeId, imgId){
+        const openBtn=document.getElementById(openId);
+        const ov=document.getElementById(overlayId);
+        const bg=document.getElementById(bgId);
+        const close=document.getElementById(closeId);
+        const imgEnt=document.getElementById(imgId);
+
+        function stop(e){ e.stopPropagation(); }
+
+        openBtn.addEventListener('click', ()=>{
+          ov.setAttribute('visible', true);
+          cam.components['look-controls']?.pause();
+          bg.setAttribute('animation__fadein',
+            'property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+          const srcSel = imgEnt.getAttribute('src');
+          fitToBox(srcSel, imgId);
+        });
+
+        const doClose = ()=>{
+          bg.setAttribute('animation__fadeout',
+            'property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+          setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
+        };
+
+        close.addEventListener('click', (e)=>{ stop(e); doClose(); });
+        bg.addEventListener('click', doClose); // click sullo sfondo = chiudi
+      }
+
+      setupPhotoOverlay('openCarolina','ovCarolina','bgCarolina','closeCarolina','imgCarolina');
+      setupPhotoOverlay('openTeresa','ovTeresa','bgTeresa','closeTeresa','imgTeresa');
+      setupPhotoOverlay('openMadonna','ovMadonna','bgMadonna','closeMadonna','imgMadonna');
+
+      /* ===== Overlay Sketchfab (HTML sopra la scena) ===== */
+      (function(){
+        const openBtn = document.getElementById('openSketchfab');
+        const overlay = document.getElementById('sketchfabOverlay');
+        const closeBtn= document.getElementById('closeSketchfab');
+
+        openBtn.addEventListener('click', ()=>{
+          overlay.style.display = 'flex';
+          cam.components['look-controls']?.pause();
+        });
+
+        const close = ()=>{
+          overlay.style.display = 'none';
+          cam.components['look-controls']?.play();
+        };
+
+        closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); close(); });
+        overlay.addEventListener('click', (e)=>{
+          // chiudi cliccando fuori dal riquadro
+          if (e.target === overlay) close();
+        });
+      })();
+    </script>
   </body>
 </html>
+
