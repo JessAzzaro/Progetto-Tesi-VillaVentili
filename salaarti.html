@@ -74,13 +74,19 @@
 
       <!-- Link di navigazione -->
       <a-link href="salaletteratura.html"
-              title="Torna alla Sala Letteratura"
+              title="Visita- Sala degli autori"
               image="#salaletteraprev"
               position="-6 0 -4"
               rotation="0 80 0"></a-link>
 
-      <a-link href="atrio.html"
-              title="Atrio principale"
+      <a-link href="index.html"
+              title="Torna all'ingresso"
+              image="#atrioprev"
+              position="6 0 8"
+              rotation="0 -65 0"></a-link>
+      
+        <a-link href="direzione.html"
+              title="Torna indietro"
               image="#atrioprev"
               position="6 0 8"
               rotation="0 -65 0"></a-link>
@@ -99,7 +105,7 @@
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
       <a-image id="openDoc" class="clickable" src="#searchIcon"
-               position="4 3 7" rotation="0 10 0" scale="0.8 0.8 0.8"
+               position="1 4 8" rotation="0 10 0" scale="0.8 0.8 0.8"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
       <!-- CAMERA + OVERLAY -->
@@ -114,10 +120,10 @@
             <a-image id="imgVolta" src="#volta" position="0 0.15 0.02"></a-image>
 
             <a-image id="prevVolta" class="clickable" src="#arrowL"
-                     position="-0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     position="-0.9 -0.25 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
             <a-image id="nextVolta" class="clickable" src="#arrowR"
-                     position="0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     position="0.9 -0.25 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
             <a-text id="countVolta" value="1/9"
@@ -142,10 +148,10 @@
             <a-image id="imgDoc" src="#donnacopricapo" position="0 0.15 0.02"></a-image>
 
             <a-image id="prevDoc" class="clickable" src="#arrowL"
-                     position="-0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     position="-0.9 -0.25 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
             <a-image id="nextDoc" class="clickable" src="#arrowR"
-                     position="0.9 -0.25 0.04" scale="0.18 0.18 0.18"
+                     position="0.9 -0.25 0.10" scale="0.18 0.18 0.18"
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
             <a-text id="countDoc" value="1/4"
@@ -158,7 +164,7 @@
                     position="0 -0.62 0.02"></a-text>
 
             <a-image id="closeDoc" class="clickable" src="#closeIcon"
-                     position="0 -0.86 0.30" scale="0.24 0.24 0.24"
+                     position="0 -0.86 0.70" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -210,15 +216,15 @@
           countEnt: 'countVolta',
           captionEnt: 'capVolta',
           captions: [
+            'Particolari della volta',
+            'Dettaglio della volta:puttino con libro indicante la data di costruzione della Villa',
+            'Particolari della volta',
+            'Particolari della volta',
+            'Particolari della volta',
             'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli',
-            'Volta della sala – dettagli'
+            'Particolari della volta',
+            'Particolari della volta: tavolozza indicante la data di elezione di papa Pio X, 4 agosto 1903',
+            'Particolari della volta'
           ]
         },
         doc: {
