@@ -236,59 +236,95 @@
         if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
       }
 
-      /* ===== Overlay FOTO (apri/chiudi) ===== */
-      function setupPhotoOverlay(openId, overlayId, bgId, closeId, imgId){
-        const openBtn=document.getElementById(openId);
-        const ov=document.getElementById(overlayId);
-        const bg=document.getElementById(bgId);
-        const close=document.getElementById(closeId);
-        const imgEnt=document.getElementById(imgId);
+      /* ===== Registry overlay foto ===== */
+      const OV = {
+        vittorio: {open:'openVittorio', ov:'ovVittorio', bg:'bgVittorio', close:'closeVittorio', img:'imgVittorio'},
+        capponi:  {open:'openCapponi',  ov:'ovCapponi',  bg:'bgCapponi',  close:'closeCapponi',  img:'imgCapponi'},
+        donna:    {open:'openDonna',    ov:'ovDonna',    bg:'bgDonna',    close:'closeDonna',    img:'imgDonna'}
+      };
 
-        openBtn.addEventListener('click', ()=>{
-          ov.setAttribute('visible', true);
-          cam.components['look-controls']?.pause();
-          bg.setAttribute('animation__fadein',
-            'property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
-          const srcSel = imgEnt.getAttribute('src');
-          fitToBox(srcSel, imgId);
-        });
+      let openCount = 0;
+      const pauseCam = ()=> cam.components['look-controls']?.pause();
+      const playCamIfNone = ()=> { if (openCount<=0) cam.components['look-controls']?.play(); };
 
-        close.addEventListener('click', ()=>{
-          bg.setAttribute('animation__fadeout',
-            'property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
-          setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
+      function closeAllOverlays(skipFade=false){
+        Object.keys(OV).forEach(k=>{
+          const ovEl = document.getElementById(OV[k].ov);
+          const bgEl = document.getElementById(OV[k].bg);
+          if (ovEl.getAttribute('visible')){
+            if (skipFade){
+              ovEl.setAttribute('visible', false);
+            } else {
+              bgEl.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+              setTimeout(()=> ovEl.setAttribute('visible', false), 220);
+            }
+          }
         });
+        openCount = 0;
       }
 
-      setupPhotoOverlay('openVittorio','ovVittorio','bgVittorio','closeVittorio','imgVittorio');
-      setupPhotoOverlay('openCapponi','ovCapponi','bgCapponi','closeCapponi','imgCapponi');
-      setupPhotoOverlay('openDonna','ovDonna','bgDonna','closeDonna','imgDonna');
+      function openOverlay(key){
+        const {ov,bg,img} = OV[key];
+        const ovEl = document.getElementById(ov);
+        const bgEl = document.getElementById(bg);
+        const imgEl= document.getElementById(img);
 
-      /* ===== Overlay Sketchfab (HTML sopra la scena) =====
-         Nota: gli iframe non sono entità A-Frame; per questo usiamo un overlay HTML.
-         Manteniamo comunque la pausa/ripresa dei look-controls per coerenza. */
+        // chiudi tutto prima di aprire questo
+        closeAllOverlays(true);
+
+        ovEl.setAttribute('visible', true);
+        openCount++;
+        pauseCam();
+        bgEl.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+
+        const srcSel = imgEl.getAttribute('src');
+        fitToBox(srcSel, img);
+      }
+
+      function closeOverlay(key){
+        const {ov,bg} = OV[key];
+        const ovEl = document.getElementById(ov);
+        const bgEl = document.getElementById(bg);
+        if (!ovEl.getAttribute('visible')) return;
+        bgEl.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+        setTimeout(()=>{
+          ovEl.setAttribute('visible', false);
+          openCount = Math.max(0, openCount-1);
+          playCamIfNone();
+        }, 220);
+      }
+
+      function wire(key){
+        document.getElementById(OV[key].open ).addEventListener('click', e=>{ e.stopPropagation(); openOverlay(key);  });
+        document.getElementById(OV[key].close).addEventListener('click', e=>{ e.stopPropagation(); closeOverlay(key); });
+      }
+      wire('vittorio'); wire('capponi'); wire('donna');
+
+      /* ===== Overlay Sketchfab (HTML sopra la scena) ===== */
       (function(){
         const openBtn = document.getElementById('openSketchfab');
         const overlay = document.getElementById('sketchfabOverlay');
         const closeBtn= document.getElementById('closeSketchfab');
 
-        openBtn.addEventListener('click', ()=>{
+        openBtn.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          closeAllOverlays(true);
           overlay.style.display = 'flex';
-          cam.components['look-controls']?.pause();
+          openCount++;
+          pauseCam();
         });
 
-        const close = ()=>{
+        function close(){
           overlay.style.display = 'none';
-          cam.components['look-controls']?.play();
-        };
+          openCount = Math.max(0, openCount-1);
+          playCamIfNone();
+        }
 
-        closeBtn.addEventListener('click', close);
-        overlay.addEventListener('click', (e)=>{
-          // chiudi cliccando fuori dal riquadro
-          if (e.target === overlay) close();
-        });
+        closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); close(); });
+        overlay.addEventListener('click', (e)=>{ if (e.target === overlay) close(); });
       })();
     </script>
   </body>
 </html>
+
 
