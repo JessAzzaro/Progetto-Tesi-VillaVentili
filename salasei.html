@@ -91,7 +91,7 @@
         <img id="bozzetto2" src="foto/bozzetto2.jpg">
         <img id="bozzetto3" src="foto/bozzetto3.jpg">
 
-        <!-- Audio (stessa musica delle altre sale) -->
+        <!-- Audio -->
         <audio id="bgSala6" src="audio/sottofondosala2.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -130,22 +130,26 @@
                  rotation="90 205 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- ICONE: 3 gallerie + 1 Sketchfab -->
-      <a-image id="openGaribaldi" class="clickable" src="#searchIcon"
-               position="1 0 10" rotation="0 60 0" scale="0.7 0.7 0.7"
-               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+      <!-- ICONE (visibili solo nella prima vista) -->
+      <a-entity id="iconsGroup">
+        <!-- 3 gallerie -->
+        <a-image id="openGaribaldi" class="clickable" src="#searchIcon"
+                 position="1 0 10" rotation="0 60 0" scale="0.7 0.7 0.7"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <a-image id="openEmma" class="clickable" src="#searchIcon"
-               position="-4 2 9" rotation="0 -10 0" scale="0.7 0.7 0.7"
-               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="openEmma" class="clickable" src="#searchIcon"
+                 position="-4 2 9" rotation="0 -10 0" scale="0.7 0.7 0.7"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <a-image id="openBozzetto" class="clickable" src="#searchIcon"
-               position="5 0 6" rotation="0 20 0" scale="0.7 0.7 0.7"
-               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="openBozzetto" class="clickable" src="#searchIcon"
+                 position="5 0 6" rotation="0 20 0" scale="0.7 0.7 0.7"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-      <a-image id="openSketchfab" class="clickable" src="#icon3d"
-               position="-2 0.5 4" rotation="0 -30 0" scale="0.7 0.7 0.7"
-               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <!-- Sketchfab -->
+        <a-image id="openSketchfab" class="clickable" src="#icon3d"
+                 position="-2 0.5 4" rotation="0 -30 0" scale="0.7 0.7 0.7"
+                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+      </a-entity>
 
       <!-- CAMERA + OVERLAY -->
       <a-entity id="rig">
@@ -168,7 +172,7 @@
 
             <!-- Didascalia (2 righe max) -->
             <a-text id="capGaribaldi"
-                    value="Garibaldi che saluta,gesso,cm.90x40x30,1866ca.\n(fusione postuma in bronzo,2009)"
+                    value="Garibaldi che saluta, gesso, cm.90x40x30, 1866 ca.\n(fusione postuma in bronzo, 2009)"
                     align="center" color="#fff" width="1.6"
                     position="0 -0.55 0.02"></a-text>
 
@@ -193,7 +197,7 @@
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
             <a-text id="capEmma"
-                    value="Monumento a Emma Faldi,gesso,cm.101x44x51,1874ca.\n(fusione postuma in bronzo,2009)"
+                    value="Monumento a Emma Faldi, gesso, cm.101x44x51, 1874 ca.\n(fusione postuma in bronzo, 2009)"
                     align="center" color="#fff" width="1.6"
                     position="0 -0.70 0.02"></a-text>
 
@@ -217,7 +221,7 @@
                      material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
             <a-text id="capBozzetto"
-                    value="Gioacchino Rossini, bronzo, cm.80x21x17,1989"
+                    value="Gioacchino Rossini, bronzo, cm.80x21x17, 1989"
                     align="center" color="#fff" width="1.6"
                     position="0 -0.60 0.02"></a-text>
 
@@ -247,7 +251,7 @@
           </iframe>
         </div>
         <div id="sketchfabCaption">
-          Bozzetto per il monumento a Ugo Foscolo, fusione postuma in bronzo,2009. (Gesso cm.68x70x30, 1879 ca.)
+          Bozzetto per il monumento a Ugo Foscolo, fusione postuma in bronzo, 2009. (Gesso cm.68x70x30, 1879 ca.)<br>
           Modello 3D integrato tramite Sketchfab.
         </div>
         <div id="closeSketchfab" title="Chiudi">✕</div>
@@ -257,15 +261,24 @@
     <script>
       const cam = document.getElementById('cam');
 
-      /* ===== Switch panorami (1 → 2 → 3 → 1) ===== */
+      /* ===== Switch panorami (1 → 2 → 3 → 1) + icone visibili solo in vista 1 ===== */
       (function(){
         const sky = document.getElementById('sky');
         const nextView = document.getElementById('nextView');
+        const iconsGroup = document.getElementById('iconsGroup');
         const views = ['#salasei360_1', '#salasei360_2', '#salasei360_3'];
         let idx = 0;
+
+        function applyView(){
+          sky.setAttribute('src', views[idx]);
+          // icone mostrate solo nella prima vista
+          iconsGroup.setAttribute('visible', idx === 0);
+        }
+        applyView();
+
         nextView.addEventListener('click', () => {
           idx = (idx + 1) % views.length;
-          sky.setAttribute('src', views[idx]);
+          applyView();
         });
       })();
 
@@ -301,9 +314,9 @@
 
       /* ===== Gallerie (caroselli) ===== */
       const galleries = {
-        garibaldi: { ids: ['#garibaldi1','#garibaldi2','#garibaldi3'], idx:0, imgEnt:'imgGaribaldi', countEnt:null },
-        emma:      { ids: ['#emma1','#emma2','#emma3'],             idx:0, imgEnt:'imgEmma',      countEnt:null },
-        bozzetto:  { ids: ['#bozzetto1','#bozzetto2','#bozzetto3'], idx:0, imgEnt:'imgBozzetto',  countEnt:null }
+        garibaldi: { ids: ['#garibaldi1','#garibaldi2','#garibaldi3'], idx:0, imgEnt:'imgGaribaldi' },
+        emma:      { ids: ['#emma1','#emma2','#emma3'],             idx:0, imgEnt:'imgEmma' },
+        bozzetto:  { ids: ['#bozzetto1','#bozzetto2','#bozzetto3'], idx:0, imgEnt:'imgBozzetto' }
       };
 
       function updateGallery(key){
@@ -332,24 +345,22 @@
           updateGallery(key);
         });
 
-        // chiusura
         const doClose = ()=>{
           bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
           setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
         };
         close.addEventListener('click', (e)=>{ stop(e); doClose(); });
 
-        // frecce (prev/next) con stopPropagation per evitare click-through
         prev.addEventListener('click', (e)=>{
           stop(e);
-          const g = galleries[key];
-          g.idx = (g.idx - 1 + g.ids.length) % g.ids.length;
+          const g=galleries[key];
+          g.idx=(g.idx - 1 + g.ids.length) % g.ids.length;
           updateGallery(key);
         });
         next.addEventListener('click', (e)=>{
           stop(e);
-          const g = galleries[key];
-          g.idx = (g.idx + 1) % g.ids.length;
+          const g=galleries[key];
+          g.idx=(g.idx + 1) % g.ids.length;
           updateGallery(key);
         });
 
@@ -357,17 +368,15 @@
         bg.addEventListener('click', doClose);
       }
 
-      // GARIBALDI
+      // Setup dei 3 overlay immagine
       setupPhotoOverlayWithCarousel({
         openId:'openGaribaldi', overlayId:'ovGaribaldi', bgId:'bgGaribaldi', closeId:'closeGaribaldi',
         key:'garibaldi', prevId:'prevGaribaldi', nextId:'nextGaribaldi'
       });
-      // EMMA
       setupPhotoOverlayWithCarousel({
         openId:'openEmma', overlayId:'ovEmma', bgId:'bgEmma', closeId:'closeEmma',
         key:'emma', prevId:'prevEmma', nextId:'nextEmma'
       });
-      // BOZZETTO
       setupPhotoOverlayWithCarousel({
         openId:'openBozzetto', overlayId:'ovBozzetto', bgId:'bgBozzetto', closeId:'closeBozzetto',
         key:'bozzetto', prevId:'prevBozzetto', nextId:'nextBozzetto'
@@ -398,4 +407,5 @@
     </script>
   </body>
 </html>
+
 
