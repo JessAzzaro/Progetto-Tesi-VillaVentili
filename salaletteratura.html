@@ -9,10 +9,19 @@
     <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-    <!-- (opzionali, se già usati nel progetto) -->
+    <!-- (opzionali, se li usi altrove) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
+
+    <style>
+      /* Toggle audio */
+      #audioToggle{
+        position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+        padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+        font-size:18px; line-height:1; z-index: 10;
+      }
+    </style>
   </head>
   <body>
     <a-scene
@@ -28,7 +37,6 @@
         <img id="salaartipreview" crossorigin="anonymous" src="foto/artipreview.jpg">
         <img id="vetratapreview" crossorigin="anonymous" src="foto/vetratapreview.jpg">
         <img id="aristodemopreview" crossorigin="anonymous" src="foto/atriopreviewalto.jpg">
-        <img id="salaarti" crossorigin="anonymous" src="foto/salaautori.jpg">
         <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
 
         <!-- Icone -->
@@ -37,15 +45,22 @@
         <img id="arrowL"     src="icons/arrowleft.png">
         <img id="arrowR"     src="icons/arrowright.png">
 
-        <!-- Immagini carosello autori -->
+        <!-- Immagini carosello (volta: i 4 autori) -->
         <img id="cantu"     src="foto/cantu.jpg">
         <img id="manzoni"   src="foto/manzoni.jpg">
         <img id="leopardi"  src="foto/leopardi.jpg">
         <img id="niccolo"   src="foto/niccolo.jpg">
+
+        <!-- Audio: stessa traccia dell'atrio -->
+        <audio id="bgSalaLet" src="audio/sottofondo.mp3" preload="auto"></audio>
       </a-assets>
 
       <!-- Panorama -->
       <a-sky src="#salaautori360" rotation="0 0 0"></a-sky>
+
+      <!-- Musica di sottofondo -->
+      <a-entity id="backgroundSound"
+                sound="src: #bgSalaLet; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
       <!-- Link di navigazione -->
       <a-link href="index.html"
@@ -69,50 +84,52 @@
       <!-- Copertura treppiede + logo -->
       <a-entity position="10 -300 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5"
-                    material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
+                    material="color: #ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
         <a-image src="#logo" position="0 1 0" width="70" height="70"
                  rotation="90 115 0" scale="-1 1 1"></a-image>
       </a-entity>
 
-      <!-- Icona: carosello Autori (volta) -->
+      <!-- Unica icona SEARCH per il carosello -->
       <a-image id="openAutori" class="clickable" src="#searchIcon"
-               position="0 4 6" rotation="0 0 0" scale="0.8 0.8 0.8"
+               position="0 4 8" rotation="0 0 0" scale="0.8 0.8 0.8"
                material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
       <!-- CAMERA + OVERLAY -->
       <a-entity id="rig">
         <a-entity id="cam" camera look-controls position="0 1.6 0">
 
-          <!-- Overlay carosello Autori -->
+          <!-- Overlay carosello AUTORI -->
           <a-entity id="ovAutori" visible="false" position="0 0 -2">
-            <a-plane id="bgAutori" width="2.6" height="2.2"
+            <!-- sfondo che cattura il click per chiudere -->
+            <a-plane id="bgAutori" width="2.7" height="2.2"
                      material="color:#000; opacity:0.0; transparent:true"></a-plane>
 
-            <!-- immagine adattiva -->
-            <a-image id="imgAutori" src="#cantu" position="0 0.18 0.02"></a-image>
+            <!-- immagine (adattata via JS) -->
+            <a-image id="imgAutori" src="#cantu" position="0 0.12 0.02"></a-image>
 
-            <!-- frecce sotto l’immagine -->
+            <!-- frecce -->
             <a-image id="prevAutori" class="clickable" src="#arrowL"
-                     position="-0.75 -0.16 0.03" scale="0.20 0.20 0.20"
-                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+                     position="-0.85 -0.28 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
             <a-image id="nextAutori" class="clickable" src="#arrowR"
-                     position="0.75 -0.16 0.03" scale="0.20 0.20 0.20"
-                     material="shader: flat; transparent: true; alphaTest:0.05"></a-image>
+                     position="0.85 -0.28 0.04" scale="0.18 0.18 0.18"
+                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-            <!-- contatore + didascalia (2 righe max) -->
+            <!-- contatore -->
             <a-text id="countAutori" value="1/4"
-                    align="center" color="#bbb" width="0.9"
-                    position="0 -0.02 0.02"></a-text>
+                    align="center" color="#bbb" width="1.0"
+                    position="0 0.85 0.02"></a-text>
 
+            <!-- didascalia (placeholder, modificabile) -->
             <a-text id="capAutori"
-                    value="Autori sulla volta (didascalia provvisoria)\nModifica testo in seguito."
-                    align="center" color="#fff" width="1.8"
-                    position="0 -0.48 0.02"></a-text>
+                    value="Cesare Cantù • Alessandro Manzoni • Giacomo Leopardi • Niccolò Machiavelli"
+                    align="center" color="#fff" width="1.9"
+                    position="0 -0.62 0.02"></a-text>
 
             <!-- X chiusura -->
             <a-image id="closeAutori" class="clickable" src="#closeIcon"
-                     position="0 -0.82 0.40" scale="0.26 0.26 0.26"
+                     position="0 -0.86 0.30" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -120,10 +137,27 @@
       </a-entity>
     </a-scene>
 
+    <!-- Toggle audio -->
+    <div id="audioToggle">🔊</div>
+
     <script>
       const cam = document.getElementById('cam');
 
-      /* ===== Helper: adatta immagine al box ===== */
+      /* ===== Toggle audio BG ===== */
+      (function(){
+        const audioToggle = document.getElementById('audioToggle');
+        const backgroundSound = document.getElementById('backgroundSound');
+        const bgSound = () => backgroundSound?.components?.sound;
+        let isSoundOn = true;
+        audioToggle.addEventListener('click', () => {
+          if (!bgSound()) return;
+          isSoundOn = !isSoundOn;
+          if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+          else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+        });
+      })();
+
+      /* ===== Helper: adatta l'immagine al box dell'overlay ===== */
       function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.35){
         const asset=document.querySelector(assetSelector);
         const img=document.getElementById(imgEntityId);
@@ -138,15 +172,24 @@
         if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
       }
 
-      /* ===== Carosello Autori (blocca scena durante l’overlay) ===== */
-      (function(){
-        const gallery = {
-          ids: ['#cantu','#manzoni','#leopardi','#niccolo'],
-          idx: 0,
-          imgEnt: 'imgAutori',
-          countEnt: 'countAutori'
-        };
+      /* ===== Carosello AUTORI ===== */
+      const autori = {
+        ids: ['#cantu', '#manzoni', '#leopardi', '#niccolo'],
+        idx: 0,
+        imgEnt: 'imgAutori',
+        countEnt: 'countAutori'
+      };
 
+      function updateAutori(){
+        const img = document.getElementById(autori.imgEnt);
+        const count = document.getElementById(autori.countEnt);
+        const srcId = autori.ids[autori.idx];
+        img.setAttribute('src', srcId);
+        count.setAttribute('value', (autori.idx+1) + '/' + autori.ids.length);
+        fitToBox(srcId, autori.imgEnt);
+      }
+
+      function setupAutoriOverlay(){
         const openBtn = document.getElementById('openAutori');
         const ov      = document.getElementById('ovAutori');
         const bg      = document.getElementById('bgAutori');
@@ -154,51 +197,45 @@
         const prev    = document.getElementById('prevAutori');
         const next    = document.getElementById('nextAutori');
 
-        function update(){
-          const srcId = gallery.ids[gallery.idx];
-          document.getElementById(gallery.imgEnt).setAttribute('src', srcId);
-          document.getElementById(gallery.countEnt).setAttribute('value', `${gallery.idx+1}/${gallery.ids.length}`);
-          fitToBox(srcId, gallery.imgEnt);
-        }
-
-        function pauseScene(){
-          // blocca il look e (se usi link-controls) i link
-          cam.components['look-controls']?.pause();
-        }
-        function resumeScene(){
-          cam.components['look-controls']?.play();
-        }
+        function stop(e){ e.stopPropagation(); }
 
         openBtn.addEventListener('click', ()=>{
           ov.setAttribute('visible', true);
-          pauseScene();
+          // blocca la scena 360°
+          cam.components['look-controls']?.pause();
+          // fade-in sfondo
           bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
-          update();
+          updateAutori();
         });
 
         const doClose = ()=>{
-          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
-          setTimeout(()=>{ ov.setAttribute('visible', false); resumeScene(); },220);
+          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:200; easing:easeInQuad');
+          setTimeout(()=>{
+            ov.setAttribute('visible', false);
+            // riattiva la scena 360°
+            cam.components['look-controls']?.play();
+          }, 200);
         };
-
-        // Evita click-through: ferma propagazione su frecce/close
-        function stop(e){ e.stopPropagation(); }
 
         close.addEventListener('click', (e)=>{ stop(e); doClose(); });
         bg.addEventListener('click', doClose);
 
         prev.addEventListener('click', (e)=>{
           stop(e);
-          gallery.idx = (gallery.idx - 1 + gallery.ids.length) % gallery.ids.length;
-          update();
+          autori.idx = (autori.idx - 1 + autori.ids.length) % autori.ids.length;
+          updateAutori();
         });
+
         next.addEventListener('click', (e)=>{
           stop(e);
-          gallery.idx = (gallery.idx + 1) % gallery.ids.length;
-          update();
+          autori.idx = (autori.idx + 1) % autori.ids.length;
+          updateAutori();
         });
-      })();
+      }
+
+      setupAutoriOverlay();
     </script>
   </body>
 </html>
+
 
