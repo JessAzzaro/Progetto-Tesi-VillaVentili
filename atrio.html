@@ -9,7 +9,7 @@
     <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-    <!-- (opzionali, se usati altrove) -->
+    <!-- (opzionali) -->
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
@@ -53,6 +53,7 @@
   </head>
   <body>
     <a-scene
+      id="scene"
       raycaster="far: 100; objects: .clickable, [link];"
       cursor="rayOrigin: mouse"
       camera-position
@@ -154,7 +155,7 @@
                     position="0 -0.62 0.02"></a-text>
 
             <a-image id="closeCarolina" class="clickable" src="#closeIcon"
-                     position="0 -0.84 0.70" scale="0.24 0.24 0.24"
+                     position="0 -0.66 0.77" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -170,7 +171,7 @@
                     position="0 -0.62 0.02"></a-text>
 
             <a-image id="closeTeresa" class="clickable" src="#closeIcon"
-                     position="0 -0.84 0.75" scale="0.24 0.24 0.24"
+                     position="0 -0.80 0.81" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -186,7 +187,7 @@
                     position="0 -0.62 0.02"></a-text>
 
             <a-image id="closeMadonna" class="clickable" src="#closeIcon"
-                     position="0 -0.84 0.70" scale="0.24 0.24 0.24"
+                     position="0 -0.84 0.80" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -202,7 +203,7 @@
                     position="0 -0.62 0.02"></a-text>
 
             <a-image id="closeRitratto" class="clickable" src="#closeIcon"
-                     position="0 -0.84 0.70" scale="0.24 0.24 0.24"
+                     position="0 -0.70 0.70" scale="0.24 0.24 0.24"
                      material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
           </a-entity>
 
@@ -234,7 +235,21 @@
     </div>
 
     <script>
-      const cam = document.getElementById('cam');
+      const scene = document.getElementById('scene');
+      const cam   = document.getElementById('cam');
+
+      /* ===== Raycaster lock/unlock per evitare click-through ===== */
+      const DEFAULT_RAY_OBJECTS = '.clickable, [link]';
+      let prevRayObjects = DEFAULT_RAY_OBJECTS;
+
+      function lockRay(objectsSelector){
+        // salva il selettore corrente per sicurezza
+        prevRayObjects = scene.getAttribute('raycaster')?.objects || DEFAULT_RAY_OBJECTS;
+        scene.setAttribute('raycaster', `objects: ${objectsSelector}; far: 100`);
+      }
+      function unlockRay(){
+        scene.setAttribute('raycaster', `objects: ${prevRayObjects}; far: 100`);
+      }
 
       /* ===== Toggle audio BG ===== */
       (function(){
@@ -276,29 +291,38 @@
 
         function stop(e){ e.stopPropagation(); }
 
-        openBtn.addEventListener('click', ()=>{
+        function doOpen(){
           ov.setAttribute('visible', true);
           cam.components['look-controls']?.pause();
+          // consenti click SOLO su sfondo e X dell'overlay aperto
+          lockRay(`#${bgId}, #${closeId}`);
           bg.setAttribute('animation__fadein',
             'property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
           const srcSel = imgEnt.getAttribute('src');
           fitToBox(srcSel, imgId);
-        });
+        }
 
-        const doClose = ()=>{
+        function doClose(){
           bg.setAttribute('animation__fadeout',
             'property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
-          setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
-        };
+          setTimeout(()=>{
+            ov.setAttribute('visible', false);
+            cam.components['look-controls']?.play();
+            unlockRay(); // ripristina interazioni scena
+          },220);
+        }
 
+        openBtn.addEventListener('click', doOpen);
         close.addEventListener('click', (e)=>{ stop(e); doClose(); });
         bg.addEventListener('click', doClose); // click sullo sfondo = chiudi
+
+        // ESC per chiudere
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && ov.getAttribute('visible')) doClose(); });
       }
 
       setupPhotoOverlay('openCarolina','ovCarolina','bgCarolina','closeCarolina','imgCarolina');
       setupPhotoOverlay('openTeresa','ovTeresa','bgTeresa','closeTeresa','imgTeresa');
       setupPhotoOverlay('openMadonna','ovMadonna','bgMadonna','closeMadonna','imgMadonna');
-      /* NEW: Ritratto Ventili */
       setupPhotoOverlay('openRitratto','ovRitratto','bgRitratto','closeRitratto','imgRitratto');
 
       /* ===== Overlay Sketchfab (HTML sopra la scena) ===== */
@@ -307,24 +331,26 @@
         const overlay = document.getElementById('sketchfabOverlay');
         const closeBtn= document.getElementById('closeSketchfab');
 
-        openBtn.addEventListener('click', ()=>{
+        function openSf(){
           overlay.style.display = 'flex';
           cam.components['look-controls']?.pause();
-        });
-
-        const close = ()=>{
+          // blocca del tutto i click nella scena A-Frame
+          lockRay('#closeSketchfab'); // consenti solo la X dell'overlay HTML
+        }
+        function closeSf(){
           overlay.style.display = 'none';
           cam.components['look-controls']?.play();
-        };
+          unlockRay();
+        }
 
-        closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); close(); });
-        overlay.addEventListener('click', (e)=>{
-          // chiudi cliccando fuori dal riquadro
-          if (e.target === overlay) close();
-        });
+        openBtn.addEventListener('click', openSf);
+        closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); closeSf(); });
+        overlay.addEventListener('click', (e)=>{ if (e.target === overlay) closeSf(); });
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && overlay.style.display==='flex') closeSf(); });
       })();
     </script>
   </body>
 </html>
+
 
 
