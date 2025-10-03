@@ -17,6 +17,9 @@
   <script src="js/components/link-controls.js"></script>
 </head>
 <body>
+  <!-- TOGGLE AUDIO -->
+  <div id="audioToggle" style="position:absolute; top:10px; right:10px; background:#fff; padding:10px; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.3); font-size:18px; user-select:none;">🔊</div>
+
   <a-scene raycaster="far: 100; objects: .clickable, [link];" cursor="rayOrigin: mouse" camera-position environment>
     
     <!-- Asset -->
@@ -227,9 +230,26 @@
     setupOverlay('photoBtnA','ovA','ovAbg','ovAx');
     setupOverlay('photoBtnB','ovB','ovBbg','ovBx');
     setupOverlay('photoBtnC','ovC','ovCbg','ovCx');
+
+    /* -------- TOGGLE AUDIO -------- */
+    const audioToggle = document.getElementById('audioToggle');
+    const bgMusicEl = document.getElementById('bgMusic');
+    let audioOn = true;
+
+    audioToggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      if (audioOn) {
+        bgMusicEl.play();
+        audioToggle.textContent = '🔊';
+      } else {
+        bgMusicEl.pause();
+        audioToggle.textContent = '🔇';
+      }
+    });
   </script>
 </body>
 </html>
+
 
 
 
