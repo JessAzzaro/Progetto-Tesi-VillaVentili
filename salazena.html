@@ -43,8 +43,10 @@
     <a-image id="photoBtnB" class="clickable" src="#searchIcon" position="0 -1 6" rotation="1 -15 0" scale="0.7 0.7 0.7" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
     <a-image id="photoBtnC" class="clickable" src="#searchIcon" position="5 1 5" rotation="1 50 0" scale="0.6 0.6 0.6" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
 
-    <!-- Pulsante play/stop musica -->
-    <a-image id="musicBtn" src="#musicIcon" class="clickable" position="1.2 1.8 -2" scale="0.2 0.2 0.2" material="shader: flat; transparent: true;"></a-image>
+    <!-- Pulsante play/stop musica in alto a destra -->
+    <a-image id="musicBtn" src="#musicIcon" class="clickable" 
+             position="1.2 2 -1.5" scale="0.25 0.25 0.25" 
+             material="shader: flat; transparent: true;"></a-image>
 
     <!-- CAMERA + OVERLAY MODELLO -->
     <a-entity id="rig">
@@ -183,37 +185,8 @@
     window.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
     window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
     window.addEventListener('mouseup', endDrag);
-    window.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { const t = e.touches[0]; startDrag(t.clientX, t.clientY); } }, {passive: true});
-    window.addEventListener('touchmove', (e) => { if (e.touches.length === 1) { const t = e.touches[0]; moveDrag(t.clientX, t.clientY); } }, {passive: true});
-    window.addEventListener('touchend', endDrag);
-    window.addEventListener('touchcancel', endDrag);
+   
 
-    /* -------- Overlay FOTO (A/B/C) -------- */
-    function setupOverlay(btnId, ovId, bgId, xId){
-      const btn = document.getElementById(btnId);
-      const ov = document.getElementById(ovId);
-      const bg = document.getElementById(bgId);
-      const x = document.getElementById(xId);
-      btn.addEventListener('click', () => {
-        ov.setAttribute('visible', true);
-        cam.components['look-controls']?.pause();
-        bg.setAttribute('animation__fadein', 'property: material.opacity; from: 0; to: 0.95; dur: 250');
-      });
-      x.addEventListener('click', () => {
-        bg.setAttribute('animation__fadeout', 'property: material.opacity; from: 0.95; to: 0; dur: 220');
-        setTimeout(() => {
-          ov.setAttribute('visible', false);
-          cam.components['look-controls']?.play();
-        }, 220);
-      });
-    }
-    setupOverlay('photoBtnA','ovA','ovAbg','ovAx');
-    setupOverlay('photoBtnB','ovB','ovBbg','ovBx');
-    setupOverlay('photoBtnC','ovC','ovCbg','ovCx');
-
-  </script>
-</body>
-</html>
 
 
 
