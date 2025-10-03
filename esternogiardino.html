@@ -8,10 +8,27 @@
   <script src="js/components/aframe-tooltip-component.js"></script>
   <script src="js/components/camera-position.js"></script>
   <script src="js/components/link-controls.js"></script>
-  <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-  <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
 </head>
 <body>
+  <!-- TOGGLE AUDIO -->
+  <div id="audioToggle" style="
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    font-size: 18px;
+    user-select: none;
+    z-index: 9999;">
+    🔊
+  </div>
+
+  <!-- Musica di sottofondo -->
+  <audio id="bgMusic" src="audio/giardino.mp3" autoplay loop></audio>
+
   <a-scene
     raycaster="far: 100; objects: [link];"
     cursor="rayOrigin: mouse"
@@ -32,11 +49,11 @@
     <a-sky src="#sky" rotation="0 80 0"></a-sky>
  
     <!-- Link ad altra stanza - Torna all'ingresso -->
-<a-link href="index.html" 
-    title="Bevenuto/a a Villa Ventili- Entrata" 
-    position="8 0 1" rotation="0 -90 0" image="#home" image-scale="0.5 0.5 0.5" 
-    geometry="primitive: circle ; radius: 1" material="shader: flat; src: #home" imagescale="-1 -1 -1" link="">&gt;
-</a-link>
+    <a-link href="index.html" 
+        title="Bevenuto/a a Villa Ventili- Entrata" 
+        position="8 0 1" rotation="0 -90 0" image="#home" image-scale="0.5 0.5 0.5" 
+        geometry="primitive: circle ; radius: 1" material="shader: flat; src: #home" imagescale="-1 -1 -1" link="">
+    </a-link>
     
     <!-- Link ad altra stanza - Esplora il giardino -->
     <a-link href="giardino1.html"
@@ -46,18 +63,35 @@
             rotation="0 25 0">
     </a-link>
   
-     
-  <!-- Cilindro per coprire il treppiedi con testo -->
-      <a-entity position="10 -130 12" rotation="0 0 0">
-        <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
-        <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 100 0" scale="-1 1 1"></a-image>
+    <!-- Cilindro per coprire il treppiedi con testo -->
+    <a-entity position="10 -130 12" rotation="0 0 0">
+      <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
+      <a-entity position="0 1 0">
+        <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 100 0" scale="-1 1 1"></a-image>
       </a-entity>      
-            
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
-    </a-scene>
+    </a-entity>
+    
+    <!-- Controlli VR -->
+    <a-entity id="leftHand" link-controls="hand: left"></a-entity>
+    <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+  </a-scene>
 
-  </body>
+  <script>
+    // Toggle audio
+    const audioToggle = document.getElementById('audioToggle');
+    const bgMusicEl = document.getElementById('bgMusic');
+    let audioOn = true;
+
+    audioToggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      if (audioOn) {
+        bgMusicEl.play();
+        audioToggle.textContent = '🔊';
+      } else {
+        bgMusicEl.pause();
+        audioToggle.textContent = '🔇';
+      }
+    });
+  </script>
+</body>
 </html>
