@@ -12,6 +12,7 @@
   <script src="js/components/aframe-tooltip-component.js"></script>
   <script src="js/components/camera-position.js"></script>
   <script src="js/components/link-controls.js"></script>
+  <script src="https://unpkg.com/aframe-gesture-detector/dist/aframe-gesture-detector.min.js"></script>
 </head>
 <body>
 
@@ -76,8 +77,11 @@
           <a-plane id="zenaBg" width="2.5" height="2"
                    material="color: #000000; opacity: 0.0; transparent: true"></a-plane>
 
-          <a-entity id="zenaModel" gltf-model="#statuaZena"
-                    position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35">
+          <!-- Wrapper per gestire rotazione e zoom -->
+          <a-entity id="zenaWrapper" gesture-detector>
+            <a-entity id="zenaModel" gltf-model="#statuaZena"
+                      position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35">
+            </a-entity>
           </a-entity>
 
           <a-text id="zenaCaption"
@@ -133,8 +137,6 @@
   </a-scene>
 
   <!-- Script gestione overlay + audio + blocco 360 + rotazione/zoom 3D -->
-  <script src="https://unpkg.com/aframe-gesture-detector/dist/aframe-gesture-detector.min.js"></script>
-
   <script>
     const cam = document.getElementById('cam');
 
@@ -143,27 +145,30 @@
     const openZena = document.getElementById('openZena3D');
     const closeZena = document.getElementById('closeZena3D');
     const zenaModel = document.getElementById('zenaModel');
+    const zenaWrapper = document.getElementById('zenaWrapper');
 
     let initialScale = 0.35;
     let currentRotationY = 0;
     let currentRotationX = 0;
 
-    // Gestione apertura/chiusura overlay
+    // Apertura overlay 3D
     openZena.addEventListener('click', () => {
       zenaOverlay.setAttribute('visible', true);
       cam.setAttribute('look-controls', 'enabled', false);
     });
 
-    closeZena.addEventListener('click', () => {
+    // Chiusura overlay 3D
+    function chiudiOverlay() {
       zenaOverlay.setAttribute('visible', false);
       cam.setAttribute('look-controls', 'enabled', true);
-      // reset modello
       initialScale = 0.35;
       currentRotationX = 0;
       currentRotationY = 0;
       zenaModel.setAttribute('scale', `${initialScale} ${initialScale} ${initialScale}`);
       zenaModel.setAttribute('rotation', `0 30 0`);
-    });
+    }
+    closeZena.addEventListener('click', chiudiOverlay);
+    closeZena.addEventListener('touchstart', chiudiOverlay);
 
     // Overlay Foto A/B/C e blocco 360
     ['A','B','C'].forEach(id=>{
@@ -172,6 +177,7 @@
       const closeBtn = ov.querySelector('a-image.clickable');
       btn.addEventListener('click', ()=>{ ov.setAttribute('visible', true); cam.setAttribute('look-controls','enabled',false); });
       closeBtn.addEventListener('click', ()=>{ ov.setAttribute('visible', false); cam.setAttribute('look-controls','enabled',true); });
+      closeBtn.addEventListener('touchstart', ()=>{ ov.setAttribute('visible', false); cam.setAttribute('look-controls','enabled',true); });
     });
 
     // Toggle audio
@@ -179,7 +185,6 @@
     const bgAudioEnt  = document.getElementById('bgAudio');
     const bgSound     = () => bgAudioEnt?.components?.sound;
     let bgOn = true;
-
     audioToggle.addEventListener('click', () => {
       bgOn = !bgOn;
       if (!bgSound()) return;
@@ -187,16 +192,13 @@
       else      { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
     });
 
-    // Gesture handler per modello 3D
-    zenaModel.setAttribute('gesture-detector','');
-
-    zenaModel.addEventListener('drag', function(evt){
+    // Gestione rotazione e zoom 3D
+    zenaWrapper.addEventListener('drag', (evt)=>{
       currentRotationY += evt.detail.positionChange.x * 0.5;
       currentRotationX += evt.detail.positionChange.y * 0.5;
       zenaModel.setAttribute('rotation', `${-currentRotationX} ${currentRotationY} 0`);
     });
-
-    zenaModel.addEventListener('pinch', function(evt){
+    zenaWrapper.addEventListener('pinch', (evt)=>{
       let scaleFactor = evt.detail.scale;
       let newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 2);
       zenaModel.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
@@ -205,6 +207,7 @@
 
 </body>
 </html>
+
 
 
 
