@@ -77,8 +77,8 @@
                    material="color: #000000; opacity: 0.0; transparent: true"></a-plane>
 
           <a-entity id="zenaModel" gltf-model="#statuaZena"
-                    position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35"
-                    gesture-handler></a-entity>
+                    position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35">
+          </a-entity>
 
           <a-text id="zenaCaption"
                   value="Zena la schiava, fusione in bronzo, 2009.\n(gesso, cm.90x64x55, 1870 ca)."
@@ -132,45 +132,47 @@
 
   </a-scene>
 
-  <!-- Script gestione overlay + audio + blocco 360 -->
+  <!-- Script gestione overlay + audio + blocco 360 + rotazione/zoom 3D -->
+  <script src="https://unpkg.com/aframe-gesture-detector/dist/aframe-gesture-detector.min.js"></script>
+
   <script>
-    const panorama = document.getElementById('panorama');
     const cam = document.getElementById('cam');
 
     // Overlay 3D Zena
+    const zenaOverlay = document.getElementById('zenaOverlay');
     const openZena = document.getElementById('openZena3D');
     const closeZena = document.getElementById('closeZena3D');
-    const zenaOverlay = document.getElementById('zenaOverlay');
+    const zenaModel = document.getElementById('zenaModel');
 
+    let initialScale = 0.35;
+    let currentRotationY = 0;
+    let currentRotationX = 0;
+
+    // Gestione apertura/chiusura overlay
     openZena.addEventListener('click', () => {
       zenaOverlay.setAttribute('visible', true);
       cam.setAttribute('look-controls', 'enabled', false);
     });
+
     closeZena.addEventListener('click', () => {
       zenaOverlay.setAttribute('visible', false);
       cam.setAttribute('look-controls', 'enabled', true);
+      // reset modello
+      initialScale = 0.35;
+      currentRotationX = 0;
+      currentRotationY = 0;
+      zenaModel.setAttribute('scale', `${initialScale} ${initialScale} ${initialScale}`);
+      zenaModel.setAttribute('rotation', `0 30 0`);
     });
 
-    // Overlay Foto A
-    const btnA = document.getElementById('photoBtnA');
-    const ovA = document.getElementById('ovA');
-    const closeA = ovA.querySelector('a-image.clickable');
-    btnA.addEventListener('click', () => { ovA.setAttribute('visible', true); cam.setAttribute('look-controls', 'enabled', false); });
-    closeA.addEventListener('click', () => { ovA.setAttribute('visible', false); cam.setAttribute('look-controls', 'enabled', true); });
-
-    // Overlay Foto B
-    const btnB = document.getElementById('photoBtnB');
-    const ovB = document.getElementById('ovB');
-    const closeB = ovB.querySelector('a-image.clickable');
-    btnB.addEventListener('click', () => { ovB.setAttribute('visible', true); cam.setAttribute('look-controls', 'enabled', false); });
-    closeB.addEventListener('click', () => { ovB.setAttribute('visible', false); cam.setAttribute('look-controls', 'enabled', true); });
-
-    // Overlay Foto C
-    const btnC = document.getElementById('photoBtnC');
-    const ovC = document.getElementById('ovC');
-    const closeC = ovC.querySelector('a-image.clickable');
-    btnC.addEventListener('click', () => { ovC.setAttribute('visible', true); cam.setAttribute('look-controls', 'enabled', false); });
-    closeC.addEventListener('click', () => { ovC.setAttribute('visible', false); cam.setAttribute('look-controls', 'enabled', true); });
+    // Overlay Foto A/B/C e blocco 360
+    ['A','B','C'].forEach(id=>{
+      const btn = document.getElementById('photoBtn'+id);
+      const ov = document.getElementById('ov'+id);
+      const closeBtn = ov.querySelector('a-image.clickable');
+      btn.addEventListener('click', ()=>{ ov.setAttribute('visible', true); cam.setAttribute('look-controls','enabled',false); });
+      closeBtn.addEventListener('click', ()=>{ ov.setAttribute('visible', false); cam.setAttribute('look-controls','enabled',true); });
+    });
 
     // Toggle audio
     const audioToggle = document.getElementById('audioToggle');
@@ -184,10 +186,26 @@
       if (bgOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
       else      { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
     });
+
+    // Gesture handler per modello 3D
+    zenaModel.setAttribute('gesture-detector','');
+
+    zenaModel.addEventListener('drag', function(evt){
+      currentRotationY += evt.detail.positionChange.x * 0.5;
+      currentRotationX += evt.detail.positionChange.y * 0.5;
+      zenaModel.setAttribute('rotation', `${-currentRotationX} ${currentRotationY} 0`);
+    });
+
+    zenaModel.addEventListener('pinch', function(evt){
+      let scaleFactor = evt.detail.scale;
+      let newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 2);
+      zenaModel.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
+    });
   </script>
 
 </body>
 </html>
+
 
 
 
