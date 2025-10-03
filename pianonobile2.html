@@ -2,65 +2,107 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Villa Ventili-Piano Nobile</title>
-    <meta name="description" content="Museo Pagliaccetti- Villa Ventilj Mosciano Sant'Angelo">
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <title>Villa Ventili - Piano Nobile</title>
+    <meta name="description" content="Museo Pagliaccetti - Villa Ventilj Mosciano Sant'Angelo">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+    <style>
+      /* Pulsante musica in alto a destra */
+      #music-toggle {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        font-size: 20px;
+        text-align: center;
+        line-height: 50px;
+      }
+      #music-toggle:hover {
+        background: rgba(200, 200, 200, 0.9);
+      }
+    </style>
+  </head>
   <body>
     <a-scene
       raycaster="far: 100; objects: [link];"
       cursor="rayOrigin: mouse"
       camera-position
       environment>
-  </head>
-  
+
       <!-- Componenti della pagina -->
       <a-assets>
-      <img id="uscitapreview" crossOrigin="anonymous" src="foto/uscitapreview.jpg">
-      <img id="pianonobile360_2" crossOrigin="anonymous" src="foto/pianonobile360_2.jpeg">
-      <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
-      <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
-        
+        <img id="uscitapreview" crossOrigin="anonymous" src="foto/uscitapreview.jpg">
+        <img id="pianonobile360_2" crossOrigin="anonymous" src="foto/pianonobile360_2.jpeg">
+        <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+        <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
+
+        <!-- Musica -->
+        <audio id="bg-music" src="audio/prelude.mp3" preload="auto"></audio>
+        <!-- 
+          Track: Prelude in A Major  
+          Music by https://www.fiftysounds.com
+        -->
       </a-assets>
       
+      <!-- Riproduzione musica -->
+      <a-entity id="music-player" sound="src: #bg-music; autoplay: true; loop: true; volume: 0.4"></a-entity>
+
       <!-- Immagine equirettangolare -->
-      <a-sky src="#pianonobile360_2"
-             rotation="0 -0 0"></a-sky>
+      <a-sky src="#pianonobile360_2" rotation="0 -0 0"></a-sky>
       
-       <!-- Link ad altra stanza: torna al Museo-->
+      <!-- Link ad altra stanza: Museo -->
       <a-link href="pianonobile.html"
               title="Visita il Museo Pagliaccetti"
               image="#museopreview"
               position="-5 2 11"
               rotation="0 -20 0"></a-link>
 
-      <!-- Link ad altra stanza: Torna all'atrio  -->
+      <!-- Link ad altra stanza: Atrio -->
       <a-link href="atrio.html"
               title="Torna all'atrio"
               image="#museopreview"
               position="-5 1 -4"
               rotation="0 40 0"></a-link>
       
-      
-      <!-- Cilindro per coprire il treppiedi con testo -->
+      <!-- Cilindro per coprire il treppiedi con logo -->
       <a-entity position="10 -180 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
-      </a-entity>      
-
-       
+          <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
+        </a-entity>      
+      </a-entity>
     
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
+      <!-- Controlli VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
+    <!-- Pulsante per musica -->
+    <button id="music-toggle">⏸</button>
+
+    <script>
+      const musicEntity = document.querySelector('#music-player');
+      const musicToggle = document.querySelector('#music-toggle');
+      let isPlaying = true;
+
+      musicToggle.addEventListener('click', () => {
+        if (isPlaying) {
+          musicEntity.components.sound.pauseSound();
+          musicToggle.textContent = '▶️';
+        } else {
+          musicEntity.components.sound.playSound();
+          musicToggle.textContent = '⏸';
+        }
+        isPlaying = !isPlaying;
+      });
+    </script>
   </body>
 </html>
