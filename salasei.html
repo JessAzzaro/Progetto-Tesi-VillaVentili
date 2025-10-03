@@ -89,10 +89,10 @@
   <!-- Patch lacuna volta (fissa) -->
   <a-plane id="patchVolta" 
            src="#voltaPatch" 
-           position="-2 7 -2" 
+           position="-3 7 -2" 
            rotation="-100 0 130" 
            width="10" 
-           height="6" 
+           height="7" 
            material="transparent:true; opacity:0.95; side:double"
            look-at="#cam">
   </a-plane>
@@ -125,18 +125,18 @@
       <a-entity id="ovGaribaldi" visible="false" position="0 0 -2">
         <a-plane id="bgGaribaldi" width="2.6" height="2.2" material="color:#000; opacity:0.0; transparent:true"></a-plane>
         <a-image id="imgGaribaldi" src="#garibaldi1" position="0 0.15 0.02"></a-image>
-        <a-image id="prevGaribaldi" class="clickable" src="#arrowL" position="-0.5 -0.25 0.03" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-        <a-image id="nextGaribaldi" class="clickable" src="#arrowR" position="0.5 -0.25 0.03" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="prevGaribaldi" class="clickable" src="#arrowL" position="-0.5 -0.25 0.2" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="nextGaribaldi" class="clickable" src="#arrowR" position="0.5 -0.25 0.2" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
         <a-text id="capGaribaldi" value="Garibaldi che saluta, gesso, cm.90x40x30, 1866 ca.\n(fusione postuma in bronzo, 2009)" align="center" color="#fff" width="1.6" position="0 -0.55 0.02"></a-text>
-        <a-image id="closeGaribaldi" class="clickable" src="#closeIcon" position="0 -0.85 0.30" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
+        <a-image id="closeGaribaldi" class="clickable" src="#closeIcon" position="0 0.8 0.30" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
       </a-entity>
 
       <!-- Overlay EMMA -->
       <a-entity id="ovEmma" visible="false" position="0 0 -2">
         <a-plane id="bgEmma" width="2.6" height="2.2" material="color:#000; opacity:0.0; transparent:true"></a-plane>
         <a-image id="imgEmma" src="#emma1" position="0 0.15 0.02"></a-image>
-        <a-image id="prevEmma" class="clickable" src="#arrowL" position="-0.5 -0.25 0.06" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-        <a-image id="nextEmma" class="clickable" src="#arrowR" position="0.5 -0.25 0.06" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="prevEmma" class="clickable" src="#arrowL" position="-0.4 -0.25 0.6" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="nextEmma" class="clickable" src="#arrowR" position="0.4 -0.25 0.6" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
         <a-text id="capEmma" value="Monumento a Emma Faldi, gesso, cm.101x44x51, 1874 ca.\n(fusione postuma in bronzo, 2009)" align="center" color="#fff" width="1.6" position="0 -0.70 0.02"></a-text>
         <a-image id="closeEmma" class="clickable" src="#closeIcon" position="0 -0.85 0.55" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
       </a-entity>
