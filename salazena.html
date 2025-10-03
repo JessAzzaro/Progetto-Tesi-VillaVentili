@@ -29,14 +29,14 @@
       <img id="closeIcon" src="icons/close.png">
       <img id="searchIcon" src="icons/search.png">
       <a-asset-item id="statuaZena" src="model/zena3d.glb"></a-asset-item>
-      <audio id="bgmusic" src="audio/sottofondosala2.mp3" preload="auto" loop></audio>
+      <audio id="bgAudio" src="audio/sottofondosala2.mp3" preload="auto" loop></audio>
     </a-assets>
 
     <!-- Panorama -->
-    <a-sky src="#salazena360" rotation="0 0 0"></a-sky>
+    <a-sky id="panorama" src="#salazena360" rotation="0 0 0"></a-sky>
 
     <!-- Musica in autoplay -->
-    <a-entity sound="src: #bgmusic; autoplay: true; loop: true; volume: 0.5"></a-entity>
+    <a-entity id="bgAudioEnt" sound="src: #bgAudio; autoplay: true; loop: true; volume: 0.5"></a-entity>
 
     <!-- Link torna indietro -->
     <a-link href="museopagliaccetti.html"
@@ -65,7 +65,7 @@
 
     <!-- CAMERA + Overlay -->
     <a-entity id="rig">
-      <a-entity id="cam" camera look-controls position="0 1.6 0">
+      <a-entity id="cam" camera look-controls wasd-controls="enabled: true" position="0 1.6 0">
 
         <!-- Overlay Zena 3D -->
         <a-entity id="zenaOverlay" visible="false" position="0 0 -1">
@@ -73,7 +73,9 @@
                    material="color: #000000; opacity: 0.0; transparent: true"></a-plane>
 
           <a-entity id="zenaModel" gltf-model="#statuaZena"
-                    position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35"></a-entity>
+                    position="0 -0.2 0.2" rotation="0 30 0" scale="0.35 0.35 0.35"
+                    animation="property: rotation; to: 0 390 0; loop: true; dur: 15000; easing: linear"
+                    gesture-detector></a-entity>
 
           <a-text id="zenaCaption"
                   value="Zena la schiava, fusione in bronzo, 2009.\n(gesso, cm.90x64x55, 1870 ca)."
@@ -98,7 +100,7 @@
         <a-entity id="ovB" visible="false" position="0 0 -1">
           <a-plane width="2.2" height="1.6" material="color:#000; opacity:0.0; transparent:true"></a-plane>
           <a-image src="foto/cenotafio2.jpg" position="0 0.3 0.01"></a-image>
-          <a-image class="clickable" src="#closeIcon" position="0 -0.5 0.3" scale="0.24 0.24 0.24"></a-image>
+          <a-image class="clickable" src="#closeIcon" position="0 -0.3 0.3" scale="0.14 0.14 0.14"></a-image>
           <a-text value="Studio per il Cenotafio di De' Bartolomei, gesso, cm 48x27x6, 1870 ca.\n(fusione postuma in bronzo,2009)."
                   align="center" color="#ffffff" width="0.7" position="0 -0.20 0.25"></a-text>
         </a-entity>
@@ -127,36 +129,66 @@
 
   </a-scene>
 
+  <!-- Toggle audio -->
+  <div id="audioToggle" style="position: absolute; top: 20px; right: 20px; font-size: 28px; cursor: pointer; z-index: 999;">🔊</div>
+
   <!-- Script gestione overlay -->
   <script>
+    const rig = document.getElementById('rig');
+    const cam = document.getElementById('cam');
+
+    function lockCamera(lock) {
+      cam.setAttribute('look-controls', 'enabled', !lock);
+      cam.setAttribute('wasd-controls', 'enabled', !lock);
+    }
+
     // Overlay 3D Zena
     const openZena = document.getElementById('openZena3D');
     const closeZena = document.getElementById('closeZena3D');
     const zenaOverlay = document.getElementById('zenaOverlay');
 
-    openZena.addEventListener('click', () => { zenaOverlay.setAttribute('visible', true); });
-    closeZena.addEventListener('click', () => { zenaOverlay.setAttribute('visible', false); });
+    openZena.addEventListener('click', () => { 
+      zenaOverlay.setAttribute('visible', true); 
+      lockCamera(true);
+    });
+    closeZena.addEventListener('click', () => { 
+      zenaOverlay.setAttribute('visible', false); 
+      lockCamera(false);
+    });
 
     // Overlay Foto A
     const btnA = document.getElementById('photoBtnA');
     const ovA = document.getElementById('ovA');
     const closeA = ovA.querySelector('a-image.clickable');
-    btnA.addEventListener('click', () => { ovA.setAttribute('visible', true); });
-    closeA.addEventListener('click', () => { ovA.setAttribute('visible', false); });
+    btnA.addEventListener('click', () => { ovA.setAttribute('visible', true); lockCamera(true); });
+    closeA.addEventListener('click', () => { ovA.setAttribute('visible', false); lockCamera(false); });
 
     // Overlay Foto B
     const btnB = document.getElementById('photoBtnB');
     const ovB = document.getElementById('ovB');
     const closeB = ovB.querySelector('a-image.clickable');
-    btnB.addEventListener('click', () => { ovB.setAttribute('visible', true); });
-    closeB.addEventListener('click', () => { ovB.setAttribute('visible', false); });
+    btnB.addEventListener('click', () => { ovB.setAttribute('visible', true); lockCamera(true); });
+    closeB.addEventListener('click', () => { ovB.setAttribute('visible', false); lockCamera(false); });
 
     // Overlay Foto C
     const btnC = document.getElementById('photoBtnC');
     const ovC = document.getElementById('ovC');
     const closeC = ovC.querySelector('a-image.clickable');
-    btnC.addEventListener('click', () => { ovC.setAttribute('visible', true); });
-    closeC.addEventListener('click', () => { ovC.setAttribute('visible', false); });
+    btnC.addEventListener('click', () => { ovC.setAttribute('visible', true); lockCamera(true); });
+    closeC.addEventListener('click', () => { ovC.setAttribute('visible', false); lockCamera(false); });
+
+    // Toggle audio bg
+    const audioToggle = document.getElementById('audioToggle');
+    const bgAudioEnt  = document.getElementById('bgAudioEnt');
+    const bgSound     = () => bgAudioEnt?.components?.sound;
+    let bgOn = true;
+
+    audioToggle.addEventListener('click', () => {
+      bgOn = !bgOn;
+      if (!bgSound()) return;
+      if (bgOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+      else      { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+    });
   </script>
 
 </body>
