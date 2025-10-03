@@ -76,17 +76,15 @@
         <img id="arrowL"     src="icons/arrowleft.png">
         <img id="arrowR"     src="icons/arrowright.png">
 
-        <!-- Galleria 1: garibaldi1..3 -->
+        <!-- Gallerie -->
         <img id="garibaldi1" src="foto/garibaldi1.jpg">
         <img id="garibaldi2" src="foto/garibaldi2.jpg">
         <img id="garibaldi3" src="foto/garibaldi3.jpg">
 
-        <!-- Galleria 2: emma1..3 -->
         <img id="emma1" src="foto/emma1.jpg">
         <img id="emma2" src="foto/emma2.jpg">
         <img id="emma3" src="foto/emma3.jpg">
 
-        <!-- Galleria 3: bozzetto1..3 -->
         <img id="bozzetto1" src="foto/bozzetto1.jpg">
         <img id="bozzetto2" src="foto/bozzetto2.jpg">
         <img id="bozzetto3" src="foto/bozzetto3.jpg">
@@ -141,7 +139,7 @@
                look-at="#cam">
       </a-plane>
 
-      <!-- ICONE -->
+      <!-- ICONE GALLERIE E 3D -->
       <a-entity id="iconsGroup">
         <a-image id="openGaribaldi" class="clickable" src="#searchIcon"
                  position="1 0 10" rotation="0 60 0" scale="0.7 0.7 0.7"
@@ -160,7 +158,7 @@
       <!-- CAMERA + OVERLAY -->
       <a-entity id="rig">
         <a-entity id="cam" camera look-controls position="0 1.6 0">
-          <!-- Overlays gallerie  -->
+          <!-- Overlay gallerie -->
           ...
         </a-entity>
       </a-entity>
@@ -169,25 +167,45 @@
     <!-- Toggle audio -->
     <div id="audioToggle">🔊</div>
 
-    <!-- Overlay HTML per Sketchfab  -->
-    ...
-    
+    <!-- Overlay Sketchfab -->
+    <div id="sketchfabOverlay">
+      <div id="sketchfabCard">
+        <div id="sketchfabFrameWrap">
+          <iframe
+            title="Modello 3D scultura"
+            allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share
+            src="https://sketchfab.com/models/519c2c38a8044c52a4883365767491d7/embed">
+          </iframe>
+        </div>
+        <div id="sketchfabCaption">
+          Bozzetto per il monumento a Ugo Foscolo, fusione postuma in bronzo, 2009. Modello 3D integrato tramite Sketchfab.
+        </div>
+        <div id="closeSketchfab" title="Chiudi">✕</div>
+      </div>
+    </div>
+
     <script>
       const cam = document.getElementById('cam');
 
-      /* Switch panorami + icone */
+      // SWITCH PANORAMI + ICONE
       (function(){
         const sky = document.getElementById('sky');
         const nextView = document.getElementById('nextView');
         const iconsGroup = document.getElementById('iconsGroup');
         const views = ['#salasei360_1', '#salasei360_2', '#salasei360_3'];
         let idx = 0;
-        function applyView(){ sky.setAttribute('src', views[idx]); iconsGroup.setAttribute('visible', idx === 0); }
+        function applyView(){
+          sky.setAttribute('src', views[idx]);
+          // le icone rimangono sempre visibili
+          iconsGroup.setAttribute('visible', true);
+        }
         applyView();
         nextView.addEventListener('click', () => { idx = (idx + 1) % views.length; applyView(); });
       })();
 
-      /* Toggle audio */
+      // TOGGLE AUDIO
       (function(){
         const audioToggle = document.getElementById('audioToggle');
         const backgroundSound = document.getElementById('backgroundSound');
@@ -201,11 +219,22 @@
         });
       })();
 
-      
-      ...
+      // CLICK GALLERIE / SKETCHFAB
+      const openGaribaldi = document.getElementById('openGaribaldi');
+      const openEmma     = document.getElementById('openEmma');
+      const openBozzetto = document.getElementById('openBozzetto');
+      const openSketchfab= document.getElementById('openSketchfab');
+      const overlay      = document.getElementById('sketchfabOverlay');
+      const closeOverlay = document.getElementById('closeSketchfab');
+
+      openSketchfab.addEventListener('click', ()=>{ overlay.style.display='flex'; });
+      closeOverlay.addEventListener('click', ()=>{ overlay.style.display='none'; });
+
+      // Altri script per gallerie qui...
     </script>
   </body>
 </html>
+
 
 
 
