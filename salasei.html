@@ -1,411 +1,287 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Visita – Sala 6</title>
-    <meta name="description" content="Museo Pagliaccetti – Villa Ventilj Mosciano Sant'Angelo">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<meta charset="utf-8">
+<title>Visita – Sala 6</title>
+<meta name="description" content="Museo Pagliaccetti – Villa Ventilj Mosciano Sant'Angelo">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- A-Frame -->
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<!-- A-Frame -->
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="js/components/aframe-tooltip-component.js"></script>
+<script src="js/components/camera-position.js"></script>
+<script src="js/components/link-controls.js"></script>
 
-    <!-- Componenti opzionali (se usati altrove) -->
-    <script src="js/components/aframe-tooltip-component.js"></script>
-    <script src="js/components/camera-position.js"></script>
-    <script src="js/components/link-controls.js"></script>
+<style>
+/* Toggle audio */
+#audioToggle{
+  position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
+  padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
+  font-size:18px; line-height:1; z-index: 10;
+}
 
-    <style>
-      /* Toggle audio */
-      #audioToggle{
-        position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
-        padding:10px; cursor:pointer; user-select:none; box-shadow:0 2px 8px rgba(0,0,0,.2);
-        font-size:18px; line-height:1; z-index: 10;
-      }
+/* Overlay HTML per Sketchfab */
+#sketchfabOverlay{
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.95); z-index: 20; padding: 24px;
+}
+#sketchfabCard{
+  width: min(1000px, 92vw); max-height: 92vh; display: flex; flex-direction: column; gap: 8px;
+}
+#sketchfabFrameWrap{
+  position: relative; width: 100%; padding-top: 56.25%; background: #000;
+}
+#sketchfabFrameWrap iframe{
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+}
+#sketchfabCaption{
+  color:#fff; font: 500 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-align:center; opacity:.9;
+}
+#closeSketchfab{
+  align-self:center; display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:50%; background:#fff; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.35); user-select:none;
+}
+</style>
+</head>
+<body>
+<a-scene cursor="rayOrigin: mouse" raycaster="far: 100; objects: .clickable, [link];" camera-position environment>
 
-      /* Overlay HTML per Sketchfab (fuori dalla scena A-Frame) */
-      #sketchfabOverlay{
-        position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-        background: rgba(0,0,0,.95); z-index: 20; padding: 24px;
-      }
-      #sketchfabCard{
-        width: min(1000px, 92vw);
-        max-height: 92vh;
-        display: flex; flex-direction: column; gap: 8px;
-      }
-      #sketchfabFrameWrap{
-        position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */
-        background: #000;
-      }
-      #sketchfabFrameWrap iframe{
-        position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
-      }
-      #sketchfabCaption{
-        color:#fff; font: 500 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        text-align:center; opacity:.9;
-      }
-      #closeSketchfab{
-        align-self:center;
-        display:inline-flex; align-items:center; justify-content:center;
-        width:38px; height:38px; border-radius:50%; background:#fff; cursor:pointer;
-        box-shadow:0 2px 8px rgba(0,0,0,.35); user-select:none;
-      }
-    </style>
-  </head>
-  <body>
-    <a-scene
-      cursor="rayOrigin: mouse"
-      raycaster="far: 100; objects: .clickable, [link];"
-      camera-position
-      environment>
+  <!-- ASSETS -->
+  <a-assets>
+    <!-- Panorami e preview -->
+    <img id="museopreview" crossorigin="anonymous" src="foto/museopreview.jpg">
+    <img id="salasei360_1" crossorigin="anonymous" src="foto/salasei360_1.jpeg">
+    <img id="uscitapreview" crossorigin="anonymous" src="foto/uscitapreview.jpg">
+    <img id="logo" crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
 
-      <!-- ASSETS -->
-      <a-assets>
-        <!-- Panorami e preview -->
-        <img id="museopreview"      crossorigin="anonymous" src="foto/museopreview.jpg">
-        <img id="salasei360_1"      crossorigin="anonymous" src="foto/salasei360_1.jpeg">
-        <img id="salasei360_2"      crossorigin="anonymous" src="foto/salasei360_2.jpeg">
-        <img id="salasei360_3"      crossorigin="anonymous" src="foto/salasei360_3.jpeg">
-        <img id="uscitapreview"     crossorigin="anonymous" src="foto/uscitapreview.jpg">
-        <img id="logo"              crossorigin="anonymous" src="logo/villa_ventilj_logo.png">
+    <!-- Patch -->
+    <img id="voltaPatch" src="foto/volta_patch.png">
 
-        <!-- Icone -->
-        <img id="cambio360"  src="icons/cambio360.png">
-        <img id="searchIcon" src="icons/search.png">
-        <img id="icon3d"     src="icons/icona3d.png">
-        <img id="closeIcon"  src="icons/close.png">
-        <img id="arrowL"     src="icons/arrowleft.png">
-        <img id="arrowR"     src="icons/arrowright.png">
+    <!-- Icone -->
+    <img id="searchIcon" src="icons/search.png">
+    <img id="icon3d" src="icons/icona3d.png">
+    <img id="closeIcon" src="icons/close.png">
+    <img id="arrowL" src="icons/arrowleft.png">
+    <img id="arrowR" src="icons/arrowright.png">
 
-        <!-- Galleria 1: garibaldi1..3 -->
-        <img id="garibaldi1" src="foto/garibaldi1.jpg">
-        <img id="garibaldi2" src="foto/garibaldi2.jpg">
-        <img id="garibaldi3" src="foto/garibaldi3.jpg">
+    <!-- Galleria 1: garibaldi1..3 -->
+    <img id="garibaldi1" src="foto/garibaldi1.jpg">
+    <img id="garibaldi2" src="foto/garibaldi2.jpg">
+    <img id="garibaldi3" src="foto/garibaldi3.jpg">
 
-        <!-- Galleria 2: emma1..3 -->
-        <img id="emma1" src="foto/emma1.jpg">
-        <img id="emma2" src="foto/emma2.jpg">
-        <img id="emma3" src="foto/emma3.jpg">
+    <!-- Galleria 2: emma1..3 -->
+    <img id="emma1" src="foto/emma1.jpg">
+    <img id="emma2" src="foto/emma2.jpg">
+    <img id="emma3" src="foto/emma3.jpg">
 
-        <!-- Galleria 3: bozzetto1..3 -->
-        <img id="bozzetto1" src="foto/bozzetto1.jpg">
-        <img id="bozzetto2" src="foto/bozzetto2.jpg">
-        <img id="bozzetto3" src="foto/bozzetto3.jpg">
+    <!-- Galleria 3: bozzetto1..3 -->
+    <img id="bozzetto1" src="foto/bozzetto1.jpg">
+    <img id="bozzetto2" src="foto/bozzetto2.jpg">
+    <img id="bozzetto3" src="foto/bozzetto3.jpg">
 
-        <!-- Audio -->
-        <audio id="bgSala6" src="audio/sottofondosala2.mp3" preload="auto"></audio>
-      </a-assets>
+    <!-- Audio -->
+    <audio id="bgSala6" src="audio/sottofondosala2.mp3" preload="auto"></audio>
+  </a-assets>
 
-      <!-- PANORAMA + Musica -->
-      <a-sky id="sky" src="#salasei360_1" rotation="0 0 0" material="shader: flat"></a-sky>
-      <a-entity id="backgroundSound"
-                sound="src: #bgSala6; autoplay: true; loop: true; volume: 0.8"></a-entity>
+  <!-- PANORAMA + Musica -->
+  <a-sky id="sky" src="#salasei360_1" rotation="0 0 0" material="shader: flat"></a-sky>
+  <a-entity id="backgroundSound" sound="src: #bgSala6; autoplay: true; loop: true; volume: 0.8"></a-entity>
 
-      <!-- Freccia cambio vista (cicla 1→2→3→1) -->
-      <a-image id="nextView"
-               class="clickable"
-               src="#cambio360"
-               position="-5 3 5"
-               scale="0.6 0.6 0.6"
-               rotation="0 150 0"
-               material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+  <!-- Patch lacuna volta (fissa) -->
+  <a-plane id="patchVolta" 
+           src="#voltaPatch" 
+           position="-3 7 -2" 
+           rotation="-100 0 130" 
+           width="10" 
+           height="7" 
+           material="transparent:true; opacity:0.95; side:double"
+           look-at="#cam">
+  </a-plane>
 
-      <!-- Link stanze -->
-      <a-link href="salacinque.html"
-              title="Torna indietro – Sala 5"
-              image="#museopreview"
-              position="-3 0 -8"
-              rotation="0 0 0"></a-link>
+  <!-- Link stanze -->
+  <a-link href="salacinque.html" title="Torna indietro – Sala 5" image="#museopreview" position="-3 0 -8" rotation="0 0 0"></a-link>
+  <a-link href="uscitamuseo.html" title="Uscita – Piano nobile" image="#uscitapreview" position="8 0 -1" rotation="0 -90 0"></a-link>
 
-      <a-link href="uscitamuseo.html"
-              title="Uscita – Piano nobile"
-              image="#uscitapreview"
-              position="8 0 -1"
-              rotation="0 -90 0"></a-link>
+  <!-- Copertura treppiede + logo -->
+  <a-entity position="10 -180 12">
+    <a-cylinder radius="50" height="0.5" material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
+    <a-image src="#logo" position="0 1 0" width="70" height="70" rotation="90 205 0" scale="-1 1 1"></a-image>
+  </a-entity>
 
-      <!-- Copertura treppiede + logo -->
-      <a-entity position="10 -180 12">
-        <a-cylinder radius="50" height="0.5"
-                    material="color:#ffffff; shader: flat; emissive:#ffffff"></a-cylinder>
-        <a-image src="#logo" position="0 1 0" width="70" height="70"
-                 rotation="90 205 0" scale="-1 1 1"></a-image>
+  <!-- ICONE (solo prima vista) -->
+  <a-entity id="iconsGroup">
+    <!-- 3 gallerie -->
+    <a-image id="openGaribaldi" class="clickable" src="#searchIcon" position="1 0 10" rotation="0 60 0" scale="0.7 0.7 0.7" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+    <a-image id="openEmma" class="clickable" src="#searchIcon" position="-4 2 9" rotation="0 -10 0" scale="0.7 0.7 0.7" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+    <a-image id="openBozzetto" class="clickable" src="#searchIcon" position="5 0 6" rotation="0 20 0" scale="0.7 0.7 0.7" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+    <!-- Sketchfab -->
+    <a-image id="openSketchfab" class="clickable" src="#icon3d" position="-2 0.5 4" rotation="0 -30 0" scale="0.7 0.7 0.7" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+  </a-entity>
+
+  <!-- CAMERA + OVERLAY GALLERIE -->
+  <a-entity id="rig">
+    <a-entity id="cam" camera look-controls position="0 1.6 0">
+
+      <!-- Overlay GARIBALDI -->
+      <a-entity id="ovGaribaldi" visible="false" position="0 0 -2">
+        <a-plane id="bgGaribaldi" width="2.6" height="2.2" material="color:#000; opacity:0.0; transparent:true"></a-plane>
+        <a-image id="imgGaribaldi" src="#garibaldi1" position="0 0.15 0.02"></a-image>
+        <a-image id="prevGaribaldi" class="clickable" src="#arrowL" position="-0.5 -0.25 0.2" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="nextGaribaldi" class="clickable" src="#arrowR" position="0.5 -0.25 0.2" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-text id="capGaribaldi" value="Garibaldi che saluta, gesso, cm.90x40x30, 1866 ca.\n(fusione postuma in bronzo, 2009)" align="center" color="#fff" width="1.6" position="0 -0.55 0.02"></a-text>
+        <a-image id="closeGaribaldi" class="clickable" src="#closeIcon" position="0 0.8 0.30" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
       </a-entity>
 
-      <!-- ICONE (visibili solo nella prima vista) -->
-      <a-entity id="iconsGroup">
-        <!-- 3 gallerie -->
-        <a-image id="openGaribaldi" class="clickable" src="#searchIcon"
-                 position="1 0 10" rotation="0 60 0" scale="0.7 0.7 0.7"
-                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-        <a-image id="openEmma" class="clickable" src="#searchIcon"
-                 position="-4 2 9" rotation="0 -10 0" scale="0.7 0.7 0.7"
-                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-        <a-image id="openBozzetto" class="clickable" src="#searchIcon"
-                 position="5 0 6" rotation="0 20 0" scale="0.7 0.7 0.7"
-                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-        <!-- Sketchfab -->
-        <a-image id="openSketchfab" class="clickable" src="#icon3d"
-                 position="-2 0.5 4" rotation="0 -30 0" scale="0.7 0.7 0.7"
-                 material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+      <!-- Overlay EMMA -->
+      <a-entity id="ovEmma" visible="false" position="0 0 -2">
+        <a-plane id="bgEmma" width="2.6" height="2.2" material="color:#000; opacity:0.0; transparent:true"></a-plane>
+        <a-image id="imgEmma" src="#emma1" position="0 0.15 0.02"></a-image>
+        <a-image id="prevEmma" class="clickable" src="#arrowL" position="-0.4 -0.25 0.6" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="nextEmma" class="clickable" src="#arrowR" position="0.4 -0.25 0.6" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-text id="capEmma" value="Monumento a Emma Faldi, gesso, cm.101x44x51, 1874 ca.\n(fusione postuma in bronzo, 2009)" align="center" color="#fff" width="1.6" position="0 -0.70 0.02"></a-text>
+        <a-image id="closeEmma" class="clickable" src="#closeIcon" position="0 -0.85 0.55" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
       </a-entity>
 
-      <!-- CAMERA + OVERLAY -->
-      <a-entity id="rig">
-        <a-entity id="cam" camera look-controls position="0 1.6 0">
-
-          <!-- Overlay GARIBALDI -->
-          <a-entity id="ovGaribaldi" visible="false" position="0 0 -2">
-            <a-plane id="bgGaribaldi" width="2.6" height="2.2"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="imgGaribaldi" src="#garibaldi1" position="0 0.15 0.02"></a-image>
-
-            <!-- Frecce sotto l’immagine -->
-            <a-image id="prevGaribaldi" class="clickable" src="#arrowL"
-                     position="-0.5 -0.25 0.03" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-            <a-image id="nextGaribaldi" class="clickable" src="#arrowR"
-                     position="0.5 -0.25 0.03" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-            <!-- Didascalia (2 righe max) -->
-            <a-text id="capGaribaldi"
-                    value="Garibaldi che saluta, gesso, cm.90x40x30, 1866 ca.\n(fusione postuma in bronzo, 2009)"
-                    align="center" color="#fff" width="1.6"
-                    position="0 -0.55 0.02"></a-text>
-
-            <!-- X chiusura -->
-            <a-image id="closeGaribaldi" class="clickable" src="#closeIcon"
-                     position="0 -0.85 0.30" scale="0.24 0.24 0.24"
-                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
-          </a-entity>
-
-          <!-- Overlay EMMA -->
-          <a-entity id="ovEmma" visible="false" position="0 0 -2">
-            <a-plane id="bgEmma" width="2.6" height="2.2"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="imgEmma" src="#emma1" position="0 0.15 0.02"></a-image>
-
-            <a-image id="prevEmma" class="clickable" src="#arrowL"
-                     position="-0.5 -0.25 0.06" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-            <a-image id="nextEmma" class="clickable" src="#arrowR"
-                     position="0.5 -0.25 0.06" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-            <a-text id="capEmma"
-                    value="Monumento a Emma Faldi, gesso, cm.101x44x51, 1874 ca.\n(fusione postuma in bronzo, 2009)"
-                    align="center" color="#fff" width="1.6"
-                    position="0 -0.70 0.02"></a-text>
-
-            <a-image id="closeEmma" class="clickable" src="#closeIcon"
-                     position="0 -0.85 0.55" scale="0.24 0.24 0.24"
-                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
-          </a-entity>
-
-          <!-- Overlay BOZZETTO -->
-          <a-entity id="ovBozzetto" visible="false" position="0 0 -2">
-            <a-plane id="bgBozzetto" width="2.6" height="2.2"
-                     material="color:#000; opacity:0.0; transparent:true"></a-plane>
-
-            <a-image id="imgBozzetto" src="#bozzetto1" position="0 0.15 0.02"></a-image>
-
-            <a-image id="prevBozzetto" class="clickable" src="#arrowL"
-                     position="-0.75 -0.25 0.15" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-            <a-image id="nextBozzetto" class="clickable" src="#arrowR"
-                     position="0.75 -0.25 0.15" scale="0.18 0.18 0.18"
-                     material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
-
-            <a-text id="capBozzetto"
-                    value="Gioacchino Rossini, bronzo, cm.80x21x17, 1989"
-                    align="center" color="#fff" width="1.6"
-                    position="0 -0.60 0.02"></a-text>
-
-            <a-image id="closeBozzetto" class="clickable" src="#closeIcon"
-                     position="0 -0.90 0.70" scale="0.24 0.24 0.24"
-                     material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
-          </a-entity>
-
-        </a-entity>
+      <!-- Overlay BOZZETTO -->
+      <a-entity id="ovBozzetto" visible="false" position="0 0 -2">
+        <a-plane id="bgBozzetto" width="2.6" height="2.2" material="color:#000; opacity:0.0; transparent:true"></a-plane>
+        <a-image id="imgBozzetto" src="#bozzetto1" position="0 0.15 0.02"></a-image>
+        <a-image id="prevBozzetto" class="clickable" src="#arrowL" position="-0.75 -0.25 0.15" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-image id="nextBozzetto" class="clickable" src="#arrowR" position="0.75 -0.25 0.15" scale="0.18 0.18 0.18" material="shader: flat; transparent: true; alphaTest: 0.05"></a-image>
+        <a-text id="capBozzetto" value="Gioacchino Rossini, bronzo, cm.80x21x17, 1989" align="center" color="#fff" width="1.6" position="0 -0.60 0.02"></a-text>
+        <a-image id="closeBozzetto" class="clickable" src="#closeIcon" position="0 -0.90 0.70" scale="0.24 0.24 0.24" material="shader: flat; transparent: true; alphaTest:0.05; depthTest:false"></a-image>
       </a-entity>
-    </a-scene>
 
-    <!-- Toggle audio -->
-    <div id="audioToggle">🔊</div>
+    </a-entity>
+  </a-entity>
+</a-scene>
 
-    <!-- Overlay HTML per Sketchfab (fuori dalla scena A-Frame) -->
-    <div id="sketchfabOverlay" role="dialog" aria-modal="true" aria-label="Modello 3D – Sketchfab">
-      <div id="sketchfabCard">
-        <div id="sketchfabFrameWrap">
-          <!-- Embed Sketchfab -->
-          <iframe
-            title="Ricostruzione base scultura in bronzo di Foscolo"
-            allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"
-            allow="autoplay; fullscreen; xr-spatial-tracking"
-            xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share
-            src="https://sketchfab.com/models/519c2c38a8044c52a4883365767491d7/embed">
-          </iframe>
-        </div>
-        <div id="sketchfabCaption">
-          Bozzetto per il monumento a Ugo Foscolo, fusione postuma in bronzo, 2009. (Gesso cm.68x70x30, 1879 ca.)<br>
-          Modello 3D integrato tramite Sketchfab.
-        </div>
-        <div id="closeSketchfab" title="Chiudi">✕</div>
-      </div>
+<!-- Toggle audio -->
+<div id="audioToggle">🔊</div>
+
+<!-- Overlay HTML per Sketchfab -->
+<div id="sketchfabOverlay" role="dialog" aria-modal="true" aria-label="Modello 3D – Sketchfab">
+  <div id="sketchfabCard">
+    <div id="sketchfabFrameWrap">
+      <iframe title="Ricostruzione base scultura in bronzo di Foscolo" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/519c2c38a8044c52a4883365767491d7/embed">
+      </iframe>
     </div>
+    <div id="sketchfabCaption">
+      Bozzetto per il monumento a Ugo Foscolo, fusione postuma in bronzo, 2009. (Gesso cm.68x70x30, 1879 ca.)<br>
+      Modello 3D integrato tramite Sketchfab.
+    </div>
+    <div id="closeSketchfab" title="Chiudi">✕</div>
+  </div>
+</div>
 
-    <script>
-      const cam = document.getElementById('cam');
+<script>
+const cam = document.getElementById('cam');
 
-      /* ===== Switch panorami (1 → 2 → 3 → 1) + icone visibili solo in vista 1 ===== */
-      (function(){
-        const sky = document.getElementById('sky');
-        const nextView = document.getElementById('nextView');
-        const iconsGroup = document.getElementById('iconsGroup');
-        const views = ['#salasei360_1', '#salasei360_2', '#salasei360_3'];
-        let idx = 0;
+/* ===== Toggle audio BG ===== */
+(function(){
+  const audioToggle = document.getElementById('audioToggle');
+  const backgroundSound = document.getElementById('backgroundSound');
+  const bgSound = () => backgroundSound?.components?.sound;
+  let isSoundOn = true;
+  audioToggle.addEventListener('click', () => {
+    if (!bgSound()) return;
+    isSoundOn = !isSoundOn;
+    if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
+    else { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
+  });
+})();
 
-        function applyView(){
-          sky.setAttribute('src', views[idx]);
-          // icone mostrate solo nella prima vista
-          iconsGroup.setAttribute('visible', idx === 0);
-        }
-        applyView();
+/* ===== Helper: adatta immagine nella box ===== */
+function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.35){
+  const asset=document.querySelector(assetSelector);
+  const img=document.getElementById(imgEntityId);
+  if(!asset) return;
+  const ready=()=>{
+    const w=asset.naturalWidth, h=asset.naturalHeight;
+    if(!w||!h) return;
+    const ar=w/h, boxAr=maxW/maxH;
+    let W,H;
+    if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
+    img.setAttribute('width',W.toFixed(3));
+    img.setAttribute('height',H.toFixed(3));
+  };
+  if(asset.complete) ready();
+  else asset.addEventListener('load', ready, {once:true});
+}
 
-        nextView.addEventListener('click', () => {
-          idx = (idx + 1) % views.length;
-          applyView();
-        });
-      })();
+/* ===== Gallerie (caroselli) ===== */
+const galleries = {
+  garibaldi: { ids: ['#garibaldi1','#garibaldi2','#garibaldi3'], idx:0, imgEnt:'imgGaribaldi' },
+  emma: { ids: ['#emma1','#emma2','#emma3'], idx:0, imgEnt:'imgEmma' },
+  bozzetto: { ids: ['#bozzetto1','#bozzetto2','#bozzetto3'], idx:0, imgEnt:'imgBozzetto' }
+};
 
-      /* ===== Toggle audio BG ===== */
-      (function(){
-        const audioToggle = document.getElementById('audioToggle');
-        const backgroundSound = document.getElementById('backgroundSound');
-        const bgSound = () => backgroundSound?.components?.sound;
-        let isSoundOn = true;
+function updateGallery(key){
+  const g = galleries[key];
+  const imgEnt = document.getElementById(g.imgEnt);
+  const srcId = g.ids[g.idx];
+  imgEnt.setAttribute('src', srcId);
+  fitToBox(srcId, g.imgEnt);
+}
 
-        audioToggle.addEventListener('click', () => {
-          if (!bgSound()) return;
-          isSoundOn = !isSoundOn;
-          if (isSoundOn) { bgSound().playSound(); audioToggle.textContent = '🔊'; }
-          else           { bgSound().pauseSound(); audioToggle.textContent = '🔇'; }
-        });
-      })();
+function setupPhotoOverlayWithCarousel(opts){
+  const {openId, overlayId, bgId, closeId, key, prevId, nextId} = opts;
+  const openBtn = document.getElementById(openId);
+  const ov = document.getElementById(overlayId);
+  const bg = document.getElementById(bgId);
+  const close = document.getElementById(closeId);
+  const prev = document.getElementById(prevId);
+  const next = document.getElementById(nextId);
 
-      /* ===== Helper: adatta immagine nella box ===== */
-      function fitToBox(assetSelector, imgEntityId, maxW=2.0, maxH=1.35){
-        const asset=document.querySelector(assetSelector);
-        const img=document.getElementById(imgEntityId);
-        if(!asset) return;
-        const ready=()=>{
-          const w=asset.naturalWidth, h=asset.naturalHeight; if(!w||!h) return;
-          const ar=w/h, boxAr=maxW/maxH;
-          let W,H; if(ar>boxAr){ W=maxW; H=maxW/ar; } else { H=maxH; W=maxH*ar; }
-          img.setAttribute('width',W.toFixed(3));
-          img.setAttribute('height',H.toFixed(3));
-        };
-        if(asset.complete) ready(); else asset.addEventListener('load', ready, {once:true});
-      }
+  function stop(e){ e.stopPropagation(); }
 
-      /* ===== Gallerie (caroselli) ===== */
-      const galleries = {
-        garibaldi: { ids: ['#garibaldi1','#garibaldi2','#garibaldi3'], idx:0, imgEnt:'imgGaribaldi' },
-        emma:      { ids: ['#emma1','#emma2','#emma3'],             idx:0, imgEnt:'imgEmma' },
-        bozzetto:  { ids: ['#bozzetto1','#bozzetto2','#bozzetto3'], idx:0, imgEnt:'imgBozzetto' }
-      };
+  openBtn.addEventListener('click', (e)=>{
+    ov.setAttribute('visible', true);
+    cam.components['look-controls']?.pause();
+    bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
+    updateGallery(key);
+  });
 
-      function updateGallery(key){
-        const g = galleries[key];
-        const imgEnt = document.getElementById(g.imgEnt);
-        const srcId = g.ids[g.idx];
-        imgEnt.setAttribute('src', srcId);
-        fitToBox(srcId, g.imgEnt);
-      }
+  const doClose = ()=>{
+    bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
+    setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
+  };
 
-      function setupPhotoOverlayWithCarousel(opts){
-        const {openId, overlayId, bgId, closeId, key, prevId, nextId} = opts;
-        const openBtn = document.getElementById(openId);
-        const ov      = document.getElementById(overlayId);
-        const bg      = document.getElementById(bgId);
-        const close   = document.getElementById(closeId);
-        const prev    = document.getElementById(prevId);
-        const next    = document.getElementById(nextId);
+  close.addEventListener('click', (e)=>{ stop(e); doClose(); });
+  prev.addEventListener('click', (e)=>{
+    stop(e);
+    const g=galleries[key]; g.idx=(g.idx - 1 + g.ids.length) % g.ids.length;
+    updateGallery(key);
+  });
+  next.addEventListener('click', (e)=>{
+    stop(e);
+    const g=galleries[key]; g.idx=(g.idx + 1) % g.ids.length;
+    updateGallery(key);
+  });
+  bg.addEventListener('click', doClose);
+}
 
-        function stop(e){ e.stopPropagation(); }
+// Setup overlay
+setupPhotoOverlayWithCarousel({ openId:'openGaribaldi', overlayId:'ovGaribaldi', bgId:'bgGaribaldi', closeId:'closeGaribaldi', key:'garibaldi', prevId:'prevGaribaldi', nextId:'nextGaribaldi' });
+setupPhotoOverlayWithCarousel({ openId:'openEmma', overlayId:'ovEmma', bgId:'bgEmma', closeId:'closeEmma', key:'emma', prevId:'prevEmma', nextId:'nextEmma' });
+setupPhotoOverlayWithCarousel({ openId:'openBozzetto', overlayId:'ovBozzetto', bgId:'bgBozzetto', closeId:'closeBozzetto', key:'bozzetto', prevId:'prevBozzetto', nextId:'nextBozzetto' });
 
-        openBtn.addEventListener('click', (e)=>{
-          ov.setAttribute('visible', true);
-          cam.components['look-controls']?.pause();
-          bg.setAttribute('animation__fadein','property: material.opacity; from:0; to:0.95; dur:250; easing:easeOutQuad');
-          updateGallery(key);
-        });
+/* ===== Overlay Sketchfab ===== */
+(function(){
+  const openBtn = document.getElementById('openSketchfab');
+  const overlay = document.getElementById('sketchfabOverlay');
+  const closeBtn= document.getElementById('closeSketchfab');
 
-        const doClose = ()=>{
-          bg.setAttribute('animation__fadeout','property: material.opacity; from:0.95; to:0; dur:220; easing:easeInQuad');
-          setTimeout(()=>{ ov.setAttribute('visible', false); cam.components['look-controls']?.play(); },220);
-        };
-        close.addEventListener('click', (e)=>{ stop(e); doClose(); });
-
-        prev.addEventListener('click', (e)=>{
-          stop(e);
-          const g=galleries[key];
-          g.idx=(g.idx - 1 + g.ids.length) % g.ids.length;
-          updateGallery(key);
-        });
-        next.addEventListener('click', (e)=>{
-          stop(e);
-          const g=galleries[key];
-          g.idx=(g.idx + 1) % g.ids.length;
-          updateGallery(key);
-        });
-
-        // clic sullo sfondo scuro = chiudi
-        bg.addEventListener('click', doClose);
-      }
-
-      // Setup dei 3 overlay immagine
-      setupPhotoOverlayWithCarousel({
-        openId:'openGaribaldi', overlayId:'ovGaribaldi', bgId:'bgGaribaldi', closeId:'closeGaribaldi',
-        key:'garibaldi', prevId:'prevGaribaldi', nextId:'nextGaribaldi'
-      });
-      setupPhotoOverlayWithCarousel({
-        openId:'openEmma', overlayId:'ovEmma', bgId:'bgEmma', closeId:'closeEmma',
-        key:'emma', prevId:'prevEmma', nextId:'nextEmma'
-      });
-      setupPhotoOverlayWithCarousel({
-        openId:'openBozzetto', overlayId:'ovBozzetto', bgId:'bgBozzetto', closeId:'closeBozzetto',
-        key:'bozzetto', prevId:'prevBozzetto', nextId:'nextBozzetto'
-      });
-
-      /* ===== Overlay Sketchfab (HTML sopra la scena) ===== */
-      (function(){
-        const openBtn = document.getElementById('openSketchfab');
-        const overlay = document.getElementById('sketchfabOverlay');
-        const closeBtn= document.getElementById('closeSketchfab');
-
-        openBtn.addEventListener('click', ()=>{
-          overlay.style.display = 'flex';
-          cam.components['look-controls']?.pause();
-        });
-
-        const close = ()=>{
-          overlay.style.display = 'none';
-          cam.components['look-controls']?.play();
-        };
-
-        closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); close(); });
-        overlay.addEventListener('click', (e)=>{
-          // chiudi cliccando fuori dal riquadro
-          if (e.target === overlay) close();
-        });
-      })();
-    </script>
-  </body>
+  openBtn.addEventListener('click',()=>{ overlay.style.display='flex'; });
+  closeBtn.addEventListener('click',()=>{ overlay.style.display='none'; });
+})();
+</script>
+</body>
 </html>
+
+
+
+
+
+
 
 
