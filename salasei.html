@@ -158,8 +158,6 @@
       <!-- CAMERA + OVERLAY -->
       <a-entity id="rig">
         <a-entity id="cam" camera look-controls position="0 1.6 0">
-          <!-- Overlay gallerie -->
-          ...
         </a-entity>
       </a-entity>
     </a-scene>
@@ -175,7 +173,6 @@
             title="Modello 3D scultura"
             allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"
             allow="autoplay; fullscreen; xr-spatial-tracking"
-            xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share
             src="https://sketchfab.com/models/519c2c38a8044c52a4883365767491d7/embed">
           </iframe>
         </div>
@@ -198,7 +195,6 @@
         let idx = 0;
         function applyView(){
           sky.setAttribute('src', views[idx]);
-          // le icone rimangono sempre visibili
           iconsGroup.setAttribute('visible', true);
         }
         applyView();
@@ -219,21 +215,22 @@
         });
       })();
 
-      // CLICK GALLERIE / SKETCHFAB
-      const openGaribaldi = document.getElementById('openGaribaldi');
-      const openEmma     = document.getElementById('openEmma');
-      const openBozzetto = document.getElementById('openBozzetto');
-      const openSketchfab= document.getElementById('openSketchfab');
-      const overlay      = document.getElementById('sketchfabOverlay');
+      // CLICK SKETCHFAB
+      const openSketchfab = document.getElementById('openSketchfab');
+      const overlay = document.getElementById('sketchfabOverlay');
       const closeOverlay = document.getElementById('closeSketchfab');
-
       openSketchfab.addEventListener('click', ()=>{ overlay.style.display='flex'; });
       closeOverlay.addEventListener('click', ()=>{ overlay.style.display='none'; });
 
-      // Altri script per gallerie qui...
+      // PATCH VOLTA LIEVE ROTAZIONE
+      const patch = document.getElementById('patchVolta');
+      let rot = 0;
+      setInterval(()=>{ rot += 0.05; patch.setAttribute('rotation', `-100 ${rot} 130`); }, 50);
+
     </script>
   </body>
 </html>
+
 
 
 
