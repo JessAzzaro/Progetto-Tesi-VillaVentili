@@ -8,68 +8,113 @@
     <script src="js/components/aframe-tooltip-component.js"></script>
     <script src="js/components/camera-position.js"></script>
     <script src="js/components/link-controls.js"></script>
-    <!-- Guida per i controlli dei portali da web browser: https://aframe.io/docs/1.5.0/components/link.html#controls -->
-    <!-- https://github.com/aframevr/aframe/tree/0b7aa6a0575c03963636b02ab24a9fc2658a747c/examples/showcase/link-traversal -->
-    </head>
+    <style>
+      /* Pulsante musica in alto a destra */
+      #music-toggle {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        font-size: 20px;
+        text-align: center;
+        line-height: 50px;
+      }
+      #music-toggle:hover {
+        background: rgba(200, 200, 200, 0.9);
+      }
+    </style>
+  </head>
   <body>
     <a-scene
       raycaster="far: 100; objects: [link];"
       cursor="rayOrigin: mouse"
       environment>
 
-      <!-- Camera con rotazione personalizzata -->
+      <!-- Camera -->
       <a-entity camera look-controls position="0 1.6 0" rotation="0 200 0"></a-entity>
       
-      <!-- Componenti della pagina -->
+      <!-- Assets -->
       <a-assets>
         <img id="pianonobile" crossOrigin="anonymous" src="foto/piano_1.jpeg" alt="Piano nobile di Villa Ventilj">
-        <img id="aristodemopreview" crossOrigin="anonymous" src="foto/atrioingresso3.jpeg" alt="Anteprima dell'atrio d'ingresso">>
+        <img id="aristodemopreview" crossOrigin="anonymous" src="foto/atrioingresso3.jpeg" alt="Anteprima dell'atrio d'ingresso">
         <img id="hallpreview" crossOrigin="anonymous" src="foto/vetratapreview.jpg">
         <img id="museopreview" crossOrigin="anonymous" src="foto/museopreview.jpg">
         <img id="logo" crossOrigin="anonymous" src="logo/villa_ventilj_logo.png">
+
+        <!-- Musica -->
+        <audio id="bg-music" src="audio/prelude.mp3" preload="auto"></audio>
+        <!-- 
+          Track: Prelude in A Major  
+          Music by https://www.fiftysounds.com
+        -->
       </a-assets>
+
+      <!-- Riproduzione musica -->
+      <a-entity id="music-player" sound="src: #bg-music; autoplay: true; loop: true; volume: 0.4"></a-entity>
       
-      <!-- Immagine equirettangolare -->
-      <a-sky src="#pianonobile"
-             rotation="0 0 0"></a-sky>
+      <!-- Sfondo -->
+      <a-sky src="#pianonobile" rotation="0 0 0"></a-sky>
       
-   <!-- Link ad altra stanza Torna indietro Atrio-villa -->
-<a-link href="atrio.html"
+      <!-- Link Atrio -->
+      <a-link href="atrio.html"
               title="Torna indietro-Atrio principale"
               image="#hallpreview"
               position="2 0 -8"
               rotation="0 0 0"></a-link>
 
+      <!-- Link Museo -->
+      <a-link href="museopagliaccetti.html"
+              title="Visita il Museo"
+              image="#museopreview"
+              position="-2 0 7"
+              rotation="0 0 0"></a-link>
       
-  <!-- Link ad altra stanza Visita il Museo Pagliaccetti -->
-<a-link href="museopagliaccetti.html"
-        title="Visita il Museo"
-        image="#museopreview"
-        position="-2 0 7"
-        rotation="0 0 0">
-</a-link>
-      
-   
-    <!-- Cilindro per coprire il treppiedi con testo -->
+      <!-- Logo sul pavimento -->
       <a-entity position="10 -180 12" rotation="0 0 0">
         <a-cylinder radius="50" height="0.5" color="#ffffff"></a-cylinder>
         <a-entity position="0 1 0">
-       <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 45 -118" scale="-1 1 1"></a-image>
-      </a-entity>      
+          <a-image src="#logo" position="0 0 0" width="70" height="70" rotation="90 45 -118" scale="-1 1 1"></a-image>
+        </a-entity>      
+      </a-entity>
 
- <!-- Figura con descrizione del piano nobile -->
-  <figure>
-    <img src="foto/piano_1.jpeg" alt="Vista del piano nobile di Villa Ventilj">
-    <figcaption>
-      Il piano nobile di Villa Ventilj rappresenta una delle parti più prestigiose dell'edificio, situata al primo piano dell'edificio, dove sono collocate le stanze del Museo Pagliaccetti e un tempo vi erano le camere da letto delle suore di carità
-    </figcaption>
-  </figure>
+      <!-- Figura -->
+      <figure>
+        <img src="foto/piano_1.jpeg" alt="Vista del piano nobile di Villa Ventilj">
+        <figcaption>
+          Il piano nobile di Villa Ventilj rappresenta una delle parti più prestigiose dell'edificio, situata al primo piano dell'edificio, dove sono collocate le stanze del Museo Pagliaccetti e un tempo vi erano le camere da letto delle suore di carità
+        </figcaption>
+      </figure>
     
-      
-      <!-- Controlli VR vedi: js/components/link-controls.js-->
+      <!-- Controlli VR -->
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
     </a-scene>
 
+    <!-- Pulsante per musica -->
+    <button id="music-toggle">⏸</button>
+
+    <script>
+      const musicEntity = document.querySelector('#music-player');
+      const musicToggle = document.querySelector('#music-toggle');
+      let isPlaying = true;
+
+      musicToggle.addEventListener('click', () => {
+        if (isPlaying) {
+          musicEntity.components.sound.pauseSound();
+          musicToggle.textContent = '▶️';
+        } else {
+          musicEntity.components.sound.playSound();
+          musicToggle.textContent = '⏸';
+        }
+        isPlaying = !isPlaying;
+      });
+    </script>
   </body>
 </html>
+
