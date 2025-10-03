@@ -18,7 +18,20 @@
 </head>
 <body>
   <!-- TOGGLE AUDIO -->
-  <div id="audioToggle" style="position:absolute; top:10px; right:10px; background:#fff; padding:10px; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.3); font-size:18px; user-select:none;">🔊</div>
+  <div id="audioToggle" style="
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    font-size: 18px;
+    user-select: none;
+    z-index: 9999;">
+    🔊
+  </div>
 
   <a-scene raycaster="far: 100; objects: .clickable, [link];" cursor="rayOrigin: mouse" camera-position environment>
     
@@ -249,6 +262,7 @@
   </script>
 </body>
 </html>
+
 
 
 
